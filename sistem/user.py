@@ -4,11 +4,11 @@ class User:
                  role, active, login_attempts):
         self.id = id
         self.name = name
-        self. username = username
+        self.username = username
         self.password = password
         self.role = role
         self.active = active
-        self. login_attempts = login_attempts
+        self.login_attempts = login_attempts
 
 
     def verify_password(self, password):
@@ -32,4 +32,12 @@ class User:
 
 
     def to_dict(self):
-        pass
+        return {
+            "id": self.id,
+            "name": self.name,
+            "username": self.username,
+            "password": self.password,
+            "role": self.role,
+            "active": self.active,
+            "login_attempts": self.login_attempts
+        }
