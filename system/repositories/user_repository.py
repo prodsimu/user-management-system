@@ -9,3 +9,7 @@ class UserRepository:
 
     def add_user(self, user: User):
         self.database.users.append(user)
+
+
+    def get_all_users(self):
+        return self.database.users
