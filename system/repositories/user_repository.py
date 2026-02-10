@@ -37,3 +37,12 @@ class UserRepository:
                 return user
             
         return None
+    
+
+    def delete_user(self, user_id: int):
+        for user in self.database.users:
+            if user.id == user_id:
+                self.database.users.remove(user)
+                return True
+            
+        return False
