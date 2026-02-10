@@ -29,3 +29,11 @@ class UserRepository:
                 return user
             
         return None
+    
+
+    def get_user_by_username(self, username: str):
+        for user in self.database.users:
+            if user.username == username:
+                return user
+            
+        return None
