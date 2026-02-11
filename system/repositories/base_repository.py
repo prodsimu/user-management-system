@@ -2,7 +2,7 @@ from database.database import Database
 
 
 class BaseRepository:
-    
+
     def __init__(self, database: Database, collection_name: str):
         self.database = database
         self.collection = getattr(database, collection_name)
@@ -39,3 +39,7 @@ class BaseRepository:
                 return True
             
         return False
+
+
+    def count(self):
+        return len(self.collection)
