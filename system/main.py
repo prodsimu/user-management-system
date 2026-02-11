@@ -1,27 +1,21 @@
-from user.user import User
+from models.user import User
 from database.database import Database
+from repositories.base_repository import BaseRepository
 from repositories.user_repository import UserRepository
 
 db = Database()
 repo = UserRepository(db)
 
-new_id1 = repo.get_next_id()
-user1 = User(new_id1, "jose", "jose123", "123456", "user", True, 0)
-repo.add_user(user1)
+user = User(
+    id=repo.get_next_id(),
+    name="Inacio",
+    username="inacio",
+    password="123",
+    role="admin",
+    active=True,
+    login_attempts=0
+)
 
-new_id2 = repo.get_next_id()
-user2 = User(new_id2, "jorge", "jorge123", "abcdef", "user", True, 0)
-repo.add_user(user2)
+repo.add(user)
 
-new_id3 = repo.get_next_id()
-user3 = User(new_id3, "sandro", "ehsjose", "nonono", "user", True, 0)
-repo.add_user(user3)
-
-print(repo.get_all_users())
-print("------------------------------")
-
-repo.delete_user(2)
-
-repo.update_user(1, new_password="112233")
-
-print(repo.get_all_users())
+print(repo.get_all())
