@@ -17,4 +17,4 @@ user = User(
 
 repo.add(user)
 
-print(repo.get_all())
+print(repo.exists_by_username("joao"))

@@ -16,6 +16,10 @@ class UserRepository(BaseRepository):
         return None
     
 
+    def exists_by_username(self, username: str):
+        return any(user.username == username for user in self.collection)
+
+
     def update_user(self, user_id: int, new_username: str = None, new_password: str = None):
         user = self.get_by_id(user_id)
 
