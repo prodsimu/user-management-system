@@ -43,3 +43,7 @@ class BaseRepository:
 
     def count(self):
         return len(self.collection)
+
+
+    def exists_by_id(self, item_id: int):
+        return any(item.id == item_id for item in self.collection)
