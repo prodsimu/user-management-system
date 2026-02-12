@@ -64,3 +64,14 @@ class BaseRepository:
                 return True
 
         return False
+
+
+    def get_by_field(self, field: str, value: any):
+        for item in self.collection:
+
+            attr_value = getattr(item, field, None)
+
+            if attr_value == value:
+                return item
+            
+        return None

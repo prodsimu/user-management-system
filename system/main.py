@@ -7,7 +7,7 @@ db = Database()
 repo = UserRepository(db)
 
 
-user = User(
+user_1 = User(
     id=repo.get_next_id(),
     name="Inacio",
     username="inacio",
@@ -17,15 +17,34 @@ user = User(
     login_attempts=0
 )
 
-repo.add(user)
+repo.add(user_1)
+
+user_2 = User(
+    id=repo.get_next_id(),
+    name="Joao",
+    username="joao",
+    password="123",
+    role="admin",
+    active=True,
+    login_attempts=0
+)
+
+repo.add(user_2)
+
+user_3 = User(
+    id=repo.get_next_id(),
+    name="Pedro",
+    username="pedro",
+    password="123",
+    role="admin",
+    active=True,
+    login_attempts=0
+)
+
+repo.add(user_3)
 
 
-repo.update_by_id(1, {
-    "active": "False",
-    "id": 999,
-    "name": "Joao",
-    "username": "joao"
-})
+get_by_field = repo.get_by_field("name", "Joao")
 
 
-print(repo.collection)
+print(get_by_field)
