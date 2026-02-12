@@ -66,7 +66,7 @@ class BaseRepository:
         return False
 
 
-    def get_by_field(self, field: str, value: any):
+    def get_by_field(self, field: str, value):
         for item in self.collection:
 
             attr_value = getattr(item, field, None)
@@ -75,3 +75,14 @@ class BaseRepository:
                 return item
             
         return None
+
+
+    def exists_by_field(self, field: str, value):
+        for item in self.collection:
+
+            attr_value = getattr(item, field, None)
+
+            if attr_value == value:
+                return True
+            
+        return False
