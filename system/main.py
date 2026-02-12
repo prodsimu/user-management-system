@@ -17,4 +17,12 @@ user = User(
 
 repo.add(user)
 
-print(repo.exists_by_username("joao"))
+print(repo.exists_by_username("inacio"))
+
+repo.update_by_id(1, {
+    "active": "False"
+})
+
+print(repo.exists_by_username("inacio"))
+
+print(repo.collection)

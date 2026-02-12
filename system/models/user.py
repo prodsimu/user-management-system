@@ -1,7 +1,8 @@
 class User:
-    def __init__(self,
-                 id, name, username, password,
+
+    def __init__(self, id, name, username, password, 
                  role, active, login_attempts):
+        
         self.id = id
         self.name = name
         self.username = username
@@ -13,8 +14,6 @@ class User:
 
     def __repr__(self):
         return f"User(id={self.id}, username='{self.username}', role='{self.role}', active={self.active})"
-
-
 
 
     def verify_password(self, password):

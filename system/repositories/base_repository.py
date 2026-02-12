@@ -47,3 +47,16 @@ class BaseRepository:
 
     def exists_by_id(self, item_id: int):
         return any(item.id == item_id for item in self.collection)
+
+
+    def update_by_id(self, item_id: int, new_data: dict):
+        for item in self.collection:
+            if item.id == item_id:
+
+                for key, value in new_data.items():
+                    if hasattr(item, key):
+                        setattr(item, key, value)
+
+                return True
+
+        return False
