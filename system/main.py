@@ -2,8 +2,10 @@ from models.user import User
 from database.database import Database
 from repositories.user_repository import UserRepository
 
+
 db = Database()
 repo = UserRepository(db)
+
 
 user = User(
     id=repo.get_next_id(),
@@ -17,12 +19,13 @@ user = User(
 
 repo.add(user)
 
-print(repo.exists_by_username("inacio"))
 
 repo.update_by_id(1, {
-    "active": "False"
+    "active": "False",
+    "id": 999,
+    "name": "Joao",
+    "username": "joao"
 })
 
-print(repo.exists_by_username("inacio"))
 
 print(repo.collection)

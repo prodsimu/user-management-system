@@ -54,6 +54,10 @@ class BaseRepository:
             if item.id == item_id:
 
                 for key, value in new_data.items():
+
+                    if key == "id":
+                        continue
+
                     if hasattr(item, key):
                         setattr(item, key, value)
 
