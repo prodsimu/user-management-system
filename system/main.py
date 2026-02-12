@@ -13,7 +13,7 @@ user_1 = User(
     username="inacio",
     password="123",
     role="admin",
-    active=True,
+    active=False,
     login_attempts=0
 )
 
@@ -25,7 +25,7 @@ user_2 = User(
     username="joao",
     password="123",
     role="admin",
-    active=True,
+    active=False,
     login_attempts=0
 )
 
@@ -37,14 +37,13 @@ user_3 = User(
     username="pedro",
     password="123",
     role="admin",
-    active=True,
+    active=False,
     login_attempts=0
 )
 
 repo.add(user_3)
 
 
-get_by_field = repo.get_by_field("name", "Joao")
+active_users = repo.get_active_users()
 
-
-print(get_by_field)
+print(active_users)

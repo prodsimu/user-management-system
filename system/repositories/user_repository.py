@@ -6,3 +6,13 @@ class UserRepository(BaseRepository):
 
     def __init__(self, database: Database):
         super().__init__(database, "users")
+
+
+    def get_active_users(self):
+        active_list = []
+
+        for user in self.collection:
+            if user.active:
+                active_list.append(user)
+
+        return active_list
