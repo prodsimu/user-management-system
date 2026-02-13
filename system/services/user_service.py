@@ -56,3 +56,7 @@ class UserService:
         user = self.user_repository.get_by_field("username", username)
 
         return user if user else None
+    
+
+    def list_users(self):
+        return self.user_repository.get_all()

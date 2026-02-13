@@ -33,3 +33,5 @@ get_user_by_username_2 = user_service.get_user_by_username("joao")
 
 print(f"\n{get_user_by_username_1}")
 print(f"{get_user_by_username_2}")
+
+print(f"\n{user_service.list_users()}")
