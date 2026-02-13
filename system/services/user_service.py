@@ -2,6 +2,7 @@ from models.user import User
 from repositories.user_repository import UserRepository
 
 class UserService:
+
     MAX_LOGIN_ATTEMPTS = 3
 
     def __init__(self, user_repository: UserRepository):
@@ -49,3 +50,9 @@ class UserService:
 
         verify_user.reset_login_attempts()
         return True
+
+
+    def get_user_by_username(self, username):
+        user = self.user_repository.get_by_field("username", username)
+
+        return user if user else None

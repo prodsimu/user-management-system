@@ -27,3 +27,9 @@ print("\nUSER FINAL STAGE")
 u = user_repo.get_by_field("username", "inacio")
 print("Active:", u.active)
 print("Attempts:", u.login_attempts)
+
+get_user_by_username_1 = user_service.get_user_by_username("inacio")
+get_user_by_username_2 = user_service.get_user_by_username("joao")
+
+print(f"\n{get_user_by_username_1}")
+print(f"{get_user_by_username_2}")
