@@ -76,3 +76,16 @@ class UserService:
 
         self.user_repository.delete(id)
         return True
+    
+
+    def update_username_by_id(self, id: int, new_username: str) -> bool:
+        user = self.get_user_by_id(id)
+
+        if not user:
+            return False
+        
+        if not new_username or not new_username.strip():
+            return False
+        
+        self.user_repository.update_by_id(id, new_username)
+        return True
