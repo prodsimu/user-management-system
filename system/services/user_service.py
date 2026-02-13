@@ -66,3 +66,13 @@ class UserService:
         user = self.user_repository.get_by_field("id", id)
 
         return user if user else None
+
+
+    def delete_user_by_id(self, id):
+        user = self.get_user_by_id(id)
+
+        if not user:
+            return False
+
+        self.user_repository.delete(id)
+        return True
