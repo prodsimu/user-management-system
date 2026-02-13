@@ -2,6 +2,7 @@ from models.user import User
 from repositories.user_repository import UserRepository
 
 class UserService:
+    MAX_LOGIN_ATTEMPTS = 3
 
     def __init__(self, user_repository: UserRepository):
         self.user_repository = user_repository
@@ -25,3 +26,26 @@ class UserService:
         self.user_repository.add(new_user)
 
         return new_user
+
+
+    def login(self, username, password):
+
+        verify_user = self.user_repository.get_by_field("username", username)
+
+        if not verify_user:
+            return False
+
+        if not verify_user.active:
+            return f"{verify_user.username} is blocked."
+
+        if not verify_user.verify_password(password):
+        
+            verify_user.increment_login_attempts()
+            
+            if verify_user.login_attempts >= self.MAX_LOGIN_ATTEMPTS:
+                verify_user.deactivate()
+
+            return False
+
+        verify_user.reset_login_attempts()
+        return True
