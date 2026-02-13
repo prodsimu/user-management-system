@@ -9,7 +9,7 @@ class UserService:
         self.user_repository = user_repository
 
 
-    def create_user(self, new_name, new_username, new_password):
+    def create_user(self, new_name: str, new_username: str, new_password: str):
 
         if self.user_repository.exists_by_field("username", new_username):
             return False
@@ -29,7 +29,7 @@ class UserService:
         return new_user
 
 
-    def login(self, username, password):
+    def login(self, username: str, password: str):
 
         verify_user = self.user_repository.get_by_field("username", username)
 
@@ -52,7 +52,7 @@ class UserService:
         return True
 
 
-    def get_user_by_username(self, username):
+    def get_user_by_username(self, username: str):
         user = self.user_repository.get_by_field("username", username)
 
         return user if user else None
@@ -60,3 +60,9 @@ class UserService:
 
     def list_users(self):
         return self.user_repository.get_all()
+
+
+    def get_user_by_id(self, id: int):
+        user = self.user_repository.get_by_field("id", id)
+
+        return user if user else None
