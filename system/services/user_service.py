@@ -9,19 +9,34 @@ class UserService:
         self.user_repository = user_repository
 
 
-    def create_user(self, new_name: str, new_username: str, new_password: str):
+    def create_user(self, new_name: str, new_username: str, new_password: str) -> User:
+
+        if new_name is None or new_username is None or new_password is None:
+            raise ValueError("User cannot be created: missing required fields")
+
+        new_name = new_name.strip()
+        new_username = new_username.strip()
+
+        if not new_name:
+            raise ValueError("Name cannot be empty")
+
+        if not new_username:
+            raise ValueError("Username cannot be empty")
+
+        if len(new_password) < 6:
+            raise ValueError("Password must be at least 6 characters long")
 
         if self.user_repository.exists_by_field("username", new_username):
-            return False
+            raise ValueError("Username already exists")
 
         new_user = User(
-            id = self.user_repository.get_next_id(),
-            name = new_name,
-            username = new_username,
-            password = new_password,
-            role = "user",
-            active = True,
-            login_attempts = 0
+            id=self.user_repository.get_next_id(),
+            name=new_name,
+            username=new_username,
+            password=new_password,
+            role="user",
+            active=True,
+            login_attempts=0
         )
 
         self.user_repository.add(new_user)
@@ -29,7 +44,7 @@ class UserService:
         return new_user
 
 
-    def login(self, username: str, password: str):
+    def login(self, username: str, password: str) -> bool:
 
         verify_user = self.user_repository.get_by_field("username", username)
 
