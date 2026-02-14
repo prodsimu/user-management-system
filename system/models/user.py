@@ -40,6 +40,9 @@ class User:
     def deactivate(self):
         self.active = False
 
+    def change_role(self, new_role: str):
+        self.role = new_role
+
     def to_dict(self):
         return {
             "id": self.id,
