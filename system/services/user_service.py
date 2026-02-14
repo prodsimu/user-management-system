@@ -46,24 +46,27 @@ class UserService:
 
     def login(self, username: str, password: str) -> bool:
 
-        verify_user = self.user_repository.get_by_field("username", username)
+        if not username or not password:
+            raise ValueError("Username and password required")
 
-        if not verify_user:
+        user = self.user_repository.get_by_field("username", username)
+
+        if not user:
             return False
 
-        if not verify_user.active:
-            return f"{verify_user.username} is blocked."
+        if not user.active:
+            raise PermissionError("User is blocked")
 
-        if not verify_user.verify_password(password):
-        
-            verify_user.increment_login_attempts()
+        if not user.verify_password(password):
+            user.increment_login_attempts()
             
-            if verify_user.login_attempts >= self.MAX_LOGIN_ATTEMPTS:
-                verify_user.deactivate()
+            if user.login_attempts >= self.MAX_LOGIN_ATTEMPTS:
+                user.deactivate()
+                raise PermissionError("User blocked due to too many attempts")
 
             return False
 
-        verify_user.reset_login_attempts()
+        user.reset_login_attempts()
         return True
 
 
