@@ -181,3 +181,6 @@ class UserService:
 
     def list_active_users(self) -> List[User]:
         return self.user_repository.get_active_users()
+
+    def list_inactive_users(self) -> List[User]:
+        return self.user_repository.get_inactive_users()
