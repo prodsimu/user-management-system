@@ -81,13 +81,13 @@ class UserService:
     def get_user_by_id(self, user_id: int) -> Optional[User]:
         return self.user_repository.get_by_field("id", user_id)
 
-    def delete_user_by_id(self, id):
-        user = self.get_user_by_id(id)
+    def delete_user_by_id(self, user_id) -> bool:
+        user = self.get_user_by_id(user_id)
 
         if not user:
             return False
 
-        self.user_repository.delete(id)
+        self.user_repository.delete(user_id)
         return True
 
     def update_username_by_id(self, id: int, new_username: str) -> bool:
