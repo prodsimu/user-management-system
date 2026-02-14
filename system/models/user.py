@@ -35,6 +35,7 @@ class User:
 
     def activate(self):
         self.active = True
+        self.reset_login_attempts()
 
     def deactivate(self):
         self.active = False
