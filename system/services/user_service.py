@@ -11,6 +11,8 @@ class UserService:
     def __init__(self, user_repository: UserRepository):
         self.user_repository = user_repository
 
+    # CREATE
+
     def create_user(self, new_name: str, new_username: str, new_password: str) -> User:
 
         if new_name is None or new_username is None or new_password is None:
@@ -45,30 +47,10 @@ class UserService:
 
         return new_user
 
-    def login(self, username: str, password: str) -> bool:
+    # READ
 
-        if not username or not password:
-            raise ValueError("Username and password required")
-
-        user = self.user_repository.get_by_field("username", username)
-
-        if not user:
-            return False
-
-        if not user.active:
-            raise PermissionError("User is blocked")
-
-        if not user.verify_password(password):
-            user.increment_login_attempts()
-
-            if user.login_attempts >= self.MAX_LOGIN_ATTEMPTS:
-                user.deactivate()
-                raise PermissionError("User blocked due to too many attempts")
-
-            return False
-
-        user.reset_login_attempts()
-        return True
+    def get_user_by_id(self, user_id: int) -> Optional[User]:
+        return self.user_repository.get_by_field("id", user_id)
 
     def get_user_by_username(self, username: str) -> Optional[User]:
         if not username:
@@ -79,17 +61,13 @@ class UserService:
     def list_users(self) -> List[User]:
         return self.user_repository.get_all()
 
-    def get_user_by_id(self, user_id: int) -> Optional[User]:
-        return self.user_repository.get_by_field("id", user_id)
+    def list_active_users(self) -> List[User]:
+        return self.user_repository.get_active_users()
 
-    def delete_user_by_id(self, user_id) -> bool:
-        user = self.get_user_by_id(user_id)
+    def list_inactive_users(self) -> List[User]:
+        return self.user_repository.get_inactive_users()
 
-        if not user:
-            return False
-
-        self.user_repository.delete(user_id)
-        return True
+    # UPDATE
 
     def update_username_by_id(self, user_id: int, new_username: str) -> bool:
         user = self.get_user_by_id(user_id)
@@ -135,18 +113,6 @@ class UserService:
         user.change_password(new_password)
         return True
 
-    def deactivate_user_by_id(self, user_id: int) -> bool:
-        user = self.get_user_by_id(user_id)
-
-        if not user:
-            return False
-
-        if not user.active:
-            return False
-
-        user.deactivate()
-        return True
-
     def activate_user_by_id(self, user_id: int) -> bool:
         user = self.get_user_by_id(user_id)
 
@@ -157,6 +123,18 @@ class UserService:
             return False
 
         user.activate()
+        return True
+
+    def deactivate_user_by_id(self, user_id: int) -> bool:
+        user = self.get_user_by_id(user_id)
+
+        if not user:
+            return False
+
+        if not user.active:
+            return False
+
+        user.deactivate()
         return True
 
     def change_role_by_id(self, user_id: int, new_role: str) -> bool:
@@ -179,8 +157,40 @@ class UserService:
         user.change_role(new_role)
         return True
 
-    def list_active_users(self) -> List[User]:
-        return self.user_repository.get_active_users()
+    # DELETE
 
-    def list_inactive_users(self) -> List[User]:
-        return self.user_repository.get_inactive_users()
+    def delete_user_by_id(self, user_id: int) -> bool:
+        user = self.get_user_by_id(user_id)
+
+        if not user:
+            return False
+
+        self.user_repository.delete(user_id)
+        return True
+
+    # AUTH / BUSINESS RULES
+
+    def login(self, username: str, password: str) -> bool:
+
+        if not username or not password:
+            raise ValueError("Username and password required")
+
+        user = self.user_repository.get_by_field("username", username)
+
+        if not user:
+            return False
+
+        if not user.active:
+            raise PermissionError("User is blocked")
+
+        if not user.verify_password(password):
+            user.increment_login_attempts()
+
+            if user.login_attempts >= self.MAX_LOGIN_ATTEMPTS:
+                user.deactivate()
+                raise PermissionError("User blocked due to too many attempts")
+
+            return False
+
+        user.reset_login_attempts()
+        return True
