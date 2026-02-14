@@ -15,3 +15,12 @@ class UserRepository(BaseRepository):
                 active_list.append(user)
 
         return active_list
+
+    def get_inactive_users(self):
+        inactive_list = []
+
+        for user in self.collection:
+            if not user.active:
+                inactive_list.append(user)
+
+        return inactive_list
