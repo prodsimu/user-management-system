@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from models.user import User
 from repositories.user_repository import UserRepository
 
@@ -75,7 +75,7 @@ class UserService:
 
         return self.user_repository.get_by_field("username", username)
 
-    def list_users(self):
+    def list_users(self) -> list[User]:
         return self.user_repository.get_all()
 
     def get_user_by_id(self, id: int):
