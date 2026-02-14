@@ -133,3 +133,15 @@ class UserService:
 
         user.change_password(new_password)
         return True
+
+    def deactivate_user_by_id(self, user_id: int) -> bool:
+        user = self.get_user_by_id(user_id)
+
+        if not user:
+            return False
+
+        if not user.active:
+            return False
+
+        user.deactivate()
+        return True
