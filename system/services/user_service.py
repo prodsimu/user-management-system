@@ -155,6 +155,5 @@ class UserService:
         if user.active:
             return False
 
-        user.login_attempts = 0
-        user.active = True
+        user.activate()
         return True
