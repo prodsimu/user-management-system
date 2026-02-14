@@ -178,3 +178,6 @@ class UserService:
 
         user.change_role(new_role)
         return True
+
+    def list_active_users(self) -> List[User]:
+        return self.user_repository.get_active_users()
