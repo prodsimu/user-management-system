@@ -158,3 +158,23 @@ class UserService:
 
         user.activate()
         return True
+
+    def change_role_by_id(self, user_id: int, new_role: str) -> bool:
+        user = self.get_user_by_id(user_id)
+
+        if not user:
+            return False
+
+        if not new_role or not new_role.strip():
+            return False
+
+        new_role = new_role.strip().lower()
+
+        if new_role not in self.VALID_ROLES:
+            return False
+
+        if user.role == new_role:
+            return False
+
+        user.change_role(new_role)
+        return True
