@@ -1,5 +1,7 @@
+from typing import Optional
 from models.user import User
 from repositories.user_repository import UserRepository
+
 
 class UserService:
 
@@ -7,7 +9,6 @@ class UserService:
 
     def __init__(self, user_repository: UserRepository):
         self.user_repository = user_repository
-
 
     def create_user(self, new_name: str, new_username: str, new_password: str) -> User:
 
@@ -36,13 +37,12 @@ class UserService:
             password=new_password,
             role="user",
             active=True,
-            login_attempts=0
+            login_attempts=0,
         )
 
         self.user_repository.add(new_user)
 
         return new_user
-
 
     def login(self, username: str, password: str) -> bool:
 
@@ -59,7 +59,7 @@ class UserService:
 
         if not user.verify_password(password):
             user.increment_login_attempts()
-            
+
             if user.login_attempts >= self.MAX_LOGIN_ATTEMPTS:
                 user.deactivate()
                 raise PermissionError("User blocked due to too many attempts")
@@ -69,22 +69,19 @@ class UserService:
         user.reset_login_attempts()
         return True
 
+    def get_user_by_username(self, username: str) -> Optional[User]:
+        if not username:
+            return None
 
-    def get_user_by_username(self, username: str):
-        user = self.user_repository.get_by_field("username", username)
-
-        return user if user else None
-    
+        return self.user_repository.get_by_field("username", username)
 
     def list_users(self):
         return self.user_repository.get_all()
-
 
     def get_user_by_id(self, id: int):
         user = self.user_repository.get_by_field("id", id)
 
         return user if user else None
-
 
     def delete_user_by_id(self, id):
         user = self.get_user_by_id(id)
@@ -94,16 +91,15 @@ class UserService:
 
         self.user_repository.delete(id)
         return True
-    
 
     def update_username_by_id(self, id: int, new_username: str) -> bool:
         user = self.get_user_by_id(id)
 
         if not user:
             return False
-        
+
         if not new_username or not new_username.strip():
             return False
-        
+
         self.user_repository.update_by_id(id, new_username)
         return True
