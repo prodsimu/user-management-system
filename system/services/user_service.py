@@ -145,3 +145,16 @@ class UserService:
 
         user.deactivate()
         return True
+
+    def activate_user_by_id(self, user_id: int) -> bool:
+        user = self.get_user_by_id(user_id)
+
+        if not user:
+            return False
+
+        if user.active:
+            return False
+
+        user.login_attempts = 0
+        user.active = True
+        return True
