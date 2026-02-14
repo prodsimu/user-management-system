@@ -75,7 +75,7 @@ class UserService:
 
         return self.user_repository.get_by_field("username", username)
 
-    def list_users(self) -> list[User]:
+    def list_users(self) -> List[User]:
         return self.user_repository.get_all()
 
     def get_user_by_id(self, user_id: int) -> Optional[User]:
@@ -107,5 +107,29 @@ class UserService:
         if self.user_repository.exists_by_field("username", new_username):
             return False
 
-        self.user_repository.update_by_id(user_id, new_username)
+        data = {"username": new_username}
+        self.user_repository.update_by_id(user_id, data)
+        return True
+
+    def update_password_by_id(self, user_id: int, new_password: str) -> bool:
+        user = self.get_user_by_id(user_id)
+
+        if not user:
+            return False
+
+        if not new_password:
+            return False
+
+        new_password = new_password.strip()
+
+        if not new_password:
+            return False
+
+        if len(new_password) < 6:
+            raise ValueError("Password must be at least 6 characters long")
+
+        if user.verify_password(new_password):
+            return False
+
+        user.change_password(new_password)
         return True
