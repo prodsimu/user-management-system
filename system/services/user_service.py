@@ -78,10 +78,8 @@ class UserService:
     def list_users(self) -> list[User]:
         return self.user_repository.get_all()
 
-    def get_user_by_id(self, id: int):
-        user = self.user_repository.get_by_field("id", id)
-
-        return user if user else None
+    def get_user_by_id(self, user_id: int) -> Optional[User]:
+        return self.user_repository.get_by_field("id", user_id)
 
     def delete_user_by_id(self, id):
         user = self.get_user_by_id(id)
