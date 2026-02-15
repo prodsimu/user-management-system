@@ -8,7 +8,7 @@ class SessionService:
     def __init__(self, session_repository: SessionRepository):
         self.session_repository = session_repository
 
-    def create_session(self, user_id: int) -> None:
+    def create_session(self, user_id: int) -> Session:
         new_session = Session(user_id)
         self.session_repository.add(new_session)
 

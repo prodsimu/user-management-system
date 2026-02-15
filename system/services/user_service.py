@@ -1,6 +1,8 @@
 from typing import Optional, List
 from models.user import User
+from models.session import Session
 from repositories.user_repository import UserRepository
+from services.session_service import SessionService
 
 
 class UserService:
@@ -8,8 +10,11 @@ class UserService:
     MAX_LOGIN_ATTEMPTS = 3
     VALID_ROLES = {"user", "admin"}
 
-    def __init__(self, user_repository: UserRepository):
+    def __init__(
+        self, user_repository: UserRepository, session_service: SessionService
+    ):
         self.user_repository = user_repository
+        self.session_service = session_service
 
     # CREATE
 
@@ -170,7 +175,7 @@ class UserService:
 
     # AUTH / BUSINESS RULES
 
-    def login(self, username: str, password: str) -> bool:
+    def login(self, username: str, password: str) -> Optional[Session]:
 
         if not username or not password:
             raise ValueError("Username and password required")
@@ -178,7 +183,7 @@ class UserService:
         user = self.user_repository.get_by_field("username", username)
 
         if not user:
-            return False
+            return None
 
         if not user.active:
             raise PermissionError("User is blocked")
@@ -190,7 +195,8 @@ class UserService:
                 user.deactivate()
                 raise PermissionError("User blocked due to too many attempts")
 
-            return False
+            return None
 
         user.reset_login_attempts()
-        return True
+
+        return self.session_service.create_session(user.id)
