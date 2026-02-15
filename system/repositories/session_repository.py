@@ -22,3 +22,13 @@ class SessionRepository(BaseRepository):
                 return session
 
         return None
+
+    def delete_user_sessions(self, user_id) -> None:
+        sessions_ids = []
+
+        for session in self.collection:
+            if session.user_id == user_id:
+                sessions_ids.append(session.id)
+
+        for session in sessions_ids:
+            self.delete(session)
