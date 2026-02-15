@@ -1,3 +1,4 @@
+from typing import Optional
 from repositories.session_repository import SessionRepository
 from models.session import Session
 
@@ -12,3 +13,6 @@ class SessionService:
         self.session_repository.add(new_session)
 
         return new_session
+
+    def get_valid_session(self, session_id) -> Optional[dict]:
+        return self.session_repository.get_valid_session_by_id(session_id)
