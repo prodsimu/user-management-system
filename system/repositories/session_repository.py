@@ -5,7 +5,8 @@ from repositories.base_repository import BaseRepository
 
 
 class SessionRepository(BaseRepository):
-    def __init__(self, database: Database):
+
+    def __init__(self, database: Database) -> None:
         super().__init__(database, "sessions")
 
     def get_valid_session_by_id(self, session_id: str) -> Optional[Session]:
@@ -24,7 +25,7 @@ class SessionRepository(BaseRepository):
         return None
 
     def delete_user_sessions(self, user_id) -> None:
-        sessions_ids = []
+        sessions_ids: list[str] = []
 
         for session in self.collection:
             if session.user_id == user_id:
