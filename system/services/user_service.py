@@ -200,3 +200,11 @@ class UserService:
         user.reset_login_attempts()
 
         return self.session_service.create_session(user.id)
+
+    def get_user_by_session_id(self, session_id: str) -> Optional[User]:
+        session = self.session_service.get_valid_session(session_id)
+
+        if not session:
+            return None
+
+        return self.get_user_by_id(session.user_id)
