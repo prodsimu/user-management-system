@@ -5,7 +5,18 @@ from services.session_service import SessionService
 from services.user_service import UserService
 
 
+def public_menu():
+    pass
+
+
+def logged_menu():
+    pass
+
+
 def main():
+
+    current_user = None
+    current_session = None
 
     db = Database()
 
@@ -18,6 +29,13 @@ def main():
     if not user_service.list_users():
         initial_admin = user_service.create_user("admin", "admin", "admin123")
         user_service.change_role_by_id(initial_admin.id, "admin")
+
+    while True:
+
+        if not current_session:
+            public_menu()
+        else:
+            logged_menu()
 
 
 if __name__ == "__main__":
