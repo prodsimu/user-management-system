@@ -23,7 +23,3 @@ class Output:
         print(f"Name = {seed.name}")
         print(f"Username = {seed.username}")
         print(f"Password = {seed.password}")
-
-
-class input:
-    pass
