@@ -1,3 +1,6 @@
+from typing import Any
+
+
 class User:
 
     def __init__(
@@ -52,7 +55,7 @@ class User:
     def change_role(self, new_role: str) -> None:
         self.role = new_role
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "id": self.id,
             "name": self.name,
