@@ -171,6 +171,7 @@ class UserService:
             return False
 
         self.user_repository.delete(user_id)
+        self.session_service.delete_all_user_sessions(user_id)
         return True
 
     # AUTH / BUSINESS RULES

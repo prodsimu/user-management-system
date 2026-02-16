@@ -17,6 +17,9 @@ class SessionService:
     def get_valid_session(self, session_id: str) -> Optional[dict]:
         return self.session_repository.get_valid_session_by_id(session_id)
 
+    def delete_all_user_sessions(self, user_id: int) -> None:
+        self.session_repository.delete_user_sessions(user_id)
+
     def logout(self, session_id: str) -> bool:
         session = self.session_repository.get_valid_session_by_id(session_id)
 
