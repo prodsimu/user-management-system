@@ -1,18 +1,20 @@
+from typing import Any, Optional
+
 from database.database import Database
 
 
 class BaseRepository:
 
-    def __init__(self, database: Database, collection_name: str):
-        self.database = database
-        self.collection = getattr(database, collection_name)
+    def __init__(self, database: Database, collection_name: str) -> None:
+        self.database: Database = database
+        self.collection: list = getattr(database, collection_name)
 
     #  CREATE
 
-    def add(self, item):
+    def add(self, item: Any) -> None:
         self.collection.append(item)
 
-    def get_next_id(self):
+    def get_next_id(self) -> int:
         if not self.collection:
             return 1
 
@@ -21,17 +23,17 @@ class BaseRepository:
 
     # READ
 
-    def get_all(self):
+    def get_all(self) -> list:
         return self.collection
 
-    def get_by_id(self, item_id: int):
+    def get_by_id(self, item_id: int) -> Optional[Any]:
         for item in self.collection:
             if item.id == item_id:
                 return item
 
         return None
 
-    def get_by_field(self, field: str, value):
+    def get_by_field(self, field: str, value: Any) -> Optional[Any]:
         for item in self.collection:
 
             attr_value = getattr(item, field, None)
@@ -41,10 +43,10 @@ class BaseRepository:
 
         return None
 
-    def exists_by_id(self, item_id: int):
+    def exists_by_id(self, item_id: int) -> bool:
         return any(item.id == item_id for item in self.collection)
 
-    def exists_by_field(self, field: str, value):
+    def exists_by_field(self, field: str, value: Any) -> bool:
         for item in self.collection:
 
             attr_value = getattr(item, field, None)
@@ -54,12 +56,12 @@ class BaseRepository:
 
         return False
 
-    def count(self):
+    def count(self) -> int:
         return len(self.collection)
 
     # UPDATE
 
-    def update_by_id(self, item_id: int, new_data: dict):
+    def update_by_id(self, item_id: int, new_data: dict[str, Any]) -> bool:
         for item in self.collection:
             if item.id == item_id:
 
@@ -77,7 +79,7 @@ class BaseRepository:
 
     # DELETE
 
-    def delete(self, item_id: int):
+    def delete(self, item_id: int) -> bool:
         for i, item in enumerate(self.collection):
             if item.id == item_id:
                 self.collection.pop(i)
