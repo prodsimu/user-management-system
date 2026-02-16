@@ -1,16 +1,25 @@
 class User:
 
-    def __init__(self, id, name, username, password, role, active, login_attempts):
+    def __init__(
+        self,
+        id: int,
+        name: str,
+        username: str,
+        password: str,
+        role: str,
+        active: bool,
+        login_attempts: int,
+    ) -> None:
 
-        self.id = id
-        self.name = name
-        self.username = username
-        self.password = password
-        self.role = role
-        self.active = active
-        self.login_attempts = login_attempts
+        self.id: int = id
+        self.name: str = name
+        self.username: str = username
+        self.password: str = password
+        self.role: str = role
+        self.active: bool = active
+        self.login_attempts: int = login_attempts
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return (
             f"id={self.id} "
             + f"\nname={self.name} "
@@ -21,29 +30,29 @@ class User:
             + f"\nlogin_attempts={self.login_attempts}"
         )
 
-    def verify_password(self, password):
+    def verify_password(self, password: str) -> bool:
         return self.password == password
 
-    def change_password(self, new_password):
+    def change_password(self, new_password: str) -> None:
         self.password = new_password
 
-    def increment_login_attempts(self):
+    def increment_login_attempts(self) -> None:
         self.login_attempts += 1
 
-    def reset_login_attempts(self):
+    def reset_login_attempts(self) -> None:
         self.login_attempts = 0
 
-    def activate(self):
+    def activate(self) -> None:
         self.active = True
         self.reset_login_attempts()
 
-    def deactivate(self):
+    def deactivate(self) -> None:
         self.active = False
 
-    def change_role(self, new_role: str):
+    def change_role(self, new_role: str) -> None:
         self.role = new_role
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         return {
             "id": self.id,
             "name": self.name,

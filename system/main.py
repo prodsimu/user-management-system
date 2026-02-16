@@ -1,12 +1,16 @@
 from database.database import Database
+from repositories.session_repository import SessionRepository
 from repositories.user_repository import UserRepository
+from services.session_service import SessionService
 from services.user_service import UserService
 
 db = Database()
 
+session_repository = SessionRepository(db)
 user_repo = UserRepository(db)
 
-user_service = UserService(user_repo)
+session_service = SessionService(session_repository)
+user_service = UserService(user_repo, session_service)
 
 print("---------- CREATE USER ----------")
 user_1 = user_service.create_user("Inacio", "inacio", "123456")

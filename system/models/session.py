@@ -16,7 +16,7 @@ class Session:
         )
         self.active = True
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return (
             f"Session(id={self.id}, user_id={self.user_id}, "
             f"active={self.active}, expires_at={self.expires_at})"
