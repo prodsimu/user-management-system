@@ -14,5 +14,14 @@ class SessionService:
 
         return new_session
 
-    def get_valid_session(self, session_id) -> Optional[dict]:
+    def get_valid_session(self, session_id: str) -> Optional[dict]:
         return self.session_repository.get_valid_session_by_id(session_id)
+
+    def logout(self, session_id: str) -> bool:
+        session = self.session_repository.get_valid_session_by_id(session_id)
+
+        if not session:
+            return False
+
+        session.invalidate()
+        return True
