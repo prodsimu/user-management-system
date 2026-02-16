@@ -12,7 +12,7 @@ class UserService:
 
     def __init__(
         self, user_repository: UserRepository, session_service: SessionService
-    ):
+    ) -> None:
         self.user_repository = user_repository
         self.session_service = session_service
 
