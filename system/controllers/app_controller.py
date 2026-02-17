@@ -39,14 +39,32 @@ class AppController:
         self.current_session = None
         self.current_user = None
 
+    def get_choice(self, valid_options: list) -> int:
+        choice = None
+
+        while choice not in valid_options:
+            try:
+                choice = int(input("Choose an option: "))
+                if choice not in valid_options:
+                    print("\nChoose a valid option\n")
+            except ValueError:
+                print("\nChoose a valid option\n")
+
+        return choice
+
     def main_loop(self) -> None:
         while True:
+
             if not self.current_session:
-                pass
+                self.menu.public_menu()
+                break
 
             if self.current_user.role == "admin":
                 self.menu.admin_menu()
+                choice = self.get_choice([0, 1, 2, 3, 4])
+                print(choice)
                 break
 
             if self.current_user.role == "user":
-                pass
+                self.menu.user_menu()
+                break
