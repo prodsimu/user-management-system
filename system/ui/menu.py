@@ -15,7 +15,7 @@ class Menu:
         print("password: admin123")
         print("Logging in...\n")
 
-    def admin_menu(self) -> int:
+    def admin_menu(self) -> None:
         print("ADMIN MENU")
         print("1 - Create user")
         print("2 - List users")
@@ -23,10 +23,13 @@ class Menu:
         print("4 - Delete User")
         print("0 - Logout")
 
-    def user_menu(self) -> int:
+    def user_menu(self) -> None:
         print("1 - Change password")
         print("0 - Logout")
 
-    def public_menu(self) -> int:
+    def public_menu(self) -> None:
         print("1 - Loggin")
         print("0 - Exit")
+
+    def shutdown(self) -> None:
+        print("Shutting down system...")
