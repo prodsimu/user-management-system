@@ -35,3 +35,20 @@ class Menu:
                 print("\nChoose a valid option\n")
 
         return choice
+
+    def public_menu(self) -> int:
+        print("1 - Loggin")
+        print("0 - Exit")
+
+        valid_options = [0, 1]
+        choice = None
+
+        while choice not in valid_options:
+            try:
+                choice = int(input("Choose an option: "))
+                if choice not in valid_options:
+                    print("\nChoose a valid option\n")
+            except ValueError:
+                print("\nChoose a valid option\n")
+
+        return choice
