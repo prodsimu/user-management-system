@@ -34,6 +34,11 @@ class AppController:
             self.current_session = self.session_service.create_session(admin.id)
             self.current_user = admin
 
+    def logout_current_session(self) -> None:
+        self.session_service.logout(self.current_session.id)
+        self.current_session = None
+        self.current_user = None
+
     def main_loop(self) -> None:
         while True:
             if not self.current_session:
