@@ -1,12 +1,4 @@
-from models.user import User
-from models.session import Session
-
-
 class Menu:
-
-    def __init__(self, user_service, session_service) -> None:
-        self.user_service = user_service
-        self.session_service = session_service
 
     def start_app(self) -> None:
         print("=== SYSTEM INITIALIZED ===")
@@ -28,7 +20,7 @@ class Menu:
         print("0 - Logout")
 
     def public_menu(self) -> None:
-        print("1 - Loggin")
+        print("1 - Login")
         print("0 - Exit")
 
     def shutdown(self) -> None:
