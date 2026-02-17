@@ -14,3 +14,24 @@ class Menu:
         print("username: admin")
         print("password: admin123")
         print("Logging in...\n")
+
+    def admin_menu(self) -> int:
+        print("ADMIN MENU")
+        print("1 - Create user")
+        print("2 - List users")
+        print("3 - Update user")
+        print("4 - Delete User")
+        print("0 - Logout")
+
+        valid_options = [0, 1, 2, 3, 4]
+        choice = None
+
+        while choice not in valid_options:
+            try:
+                choice = int(input("Choose an option: "))
+                if choice not in valid_options:
+                    print("\nChoose a valid option\n")
+            except ValueError:
+                print("\nChoose a valid option\n")
+
+        return choice
