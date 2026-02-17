@@ -33,3 +33,10 @@ class Menu:
 
     def shutdown(self) -> None:
         print("Shutting down system...")
+
+    def login_interface(self, username: bool) -> None:
+        if not username:
+            print("Username: ", end="")
+
+        if username:
+            print("Password: ", end="")
