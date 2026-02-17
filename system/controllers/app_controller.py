@@ -57,14 +57,36 @@ class AppController:
 
             if not self.current_session:
                 self.menu.public_menu()
-                break
+                choice = self.get_choice([0, 1])
+
+                match choice:
+                    case 0:
+                        pass
+                    case 1:
+                        pass
+
+            if self.current_user.role == "user":
+                self.menu.user_menu()
+                choice = self.get_choice([0, 1])
+
+                match choice:
+                    case 0:
+                        pass
+                    case 1:
+                        pass
 
             if self.current_user.role == "admin":
                 self.menu.admin_menu()
                 choice = self.get_choice([0, 1, 2, 3, 4])
-                print(choice)
-                break
 
-            if self.current_user.role == "user":
-                self.menu.user_menu()
-                break
+                match choice:
+                    case 0:
+                        pass
+                    case 1:
+                        pass
+                    case 2:
+                        pass
+                    case 3:
+                        pass
+                    case 4:
+                        pass
