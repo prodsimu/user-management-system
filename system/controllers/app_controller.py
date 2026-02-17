@@ -23,6 +23,7 @@ class AppController:
 
     def start(self) -> None:
         self.bootstrap()
+        self.main_loop()
 
     def bootstrap(self) -> None:
         seed = Seed(self.user_service)
@@ -32,3 +33,15 @@ class AppController:
             self.menu.start_app()
             self.current_session = self.session_service.create_session(admin.id)
             self.current_user = admin
+
+    def main_loop(self) -> None:
+        while True:
+            if not self.current_session:
+                pass
+
+            if self.current_user.role == "admin":
+                self.menu.admin_menu()
+                break
+
+            if self.current_user.role == "user":
+                pass
