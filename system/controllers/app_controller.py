@@ -16,7 +16,7 @@ class AppController:
     ) -> None:
         self.user_service: UserService = user_service
         self.session_service: SessionService = session_service
-        self.menu: Menu = Menu(user_service, session_service)
+        self.menu: Menu = Menu()
 
         self.current_session: Optional[Session] = None
         self.current_user: Optional[User] = None
@@ -71,9 +71,43 @@ class AppController:
 
                 match choice:
                     case 0:
-                        pass
+                        self.menu.logout_message()
+                        self.logout_current_session()
+                        continue
+
                     case 1:
-                        pass
+                        while True:
+                            current_password = input("Type your current password: ")
+
+                            if current_password != self.current_user.password:
+                                print("Invalid password")
+                                print("1 - Try again")
+                                print("0 - Cancel")
+
+                                choice = self.get_choice([0, 1])
+                                if choice == 1:
+                                    continue
+                                break
+
+                            new_password = input("Type the new password: ")
+                            verify_password = input("Confirm the password: ")
+
+                            if new_password != verify_password:
+                                print("Passwords do not match")
+                                print("1 - Try again")
+                                print("0 - Cancel")
+
+                                choice = self.get_choice([0, 1])
+                                if choice == 1:
+                                    continue
+                                break
+
+                            self.user_service.update_password_by_id(
+                                self.current_user.id, new_password
+                            )
+
+                            print("Password updated successfully")
+                            break
 
             if self.current_user.role == "admin":
                 self.menu.admin_menu()
