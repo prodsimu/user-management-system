@@ -52,6 +52,38 @@ class AppController:
 
         return choice
 
+    def change_user_password(self) -> None:
+        while True:
+            current_password = input("Type your current password: ")
+
+            if current_password != self.current_user.password:
+                print("Invalid password")
+                print("1 - Try again")
+                print("0 - Cancel")
+
+                choice = self.get_choice([0, 1])
+                if choice == 1:
+                    continue
+                break
+
+            new_password = input("Type the new password: ")
+            verify_password = input("Confirm the password: ")
+
+            if new_password != verify_password:
+                print("Passwords do not match")
+                print("1 - Try again")
+                print("0 - Cancel")
+
+                choice = self.get_choice([0, 1])
+                if choice == 1:
+                    continue
+                break
+
+            self.user_service.update_password_by_id(self.current_user.id, new_password)
+
+            print("Password updated successfully")
+            break
+
     def main_loop(self) -> None:
         while True:
 
@@ -61,7 +93,9 @@ class AppController:
 
                 match choice:
                     case 0:
-                        pass
+                        self.menu.shutdown()
+                        return
+
                     case 1:
                         pass
 
@@ -76,38 +110,8 @@ class AppController:
                         continue
 
                     case 1:
-                        while True:
-                            current_password = input("Type your current password: ")
-
-                            if current_password != self.current_user.password:
-                                print("Invalid password")
-                                print("1 - Try again")
-                                print("0 - Cancel")
-
-                                choice = self.get_choice([0, 1])
-                                if choice == 1:
-                                    continue
-                                break
-
-                            new_password = input("Type the new password: ")
-                            verify_password = input("Confirm the password: ")
-
-                            if new_password != verify_password:
-                                print("Passwords do not match")
-                                print("1 - Try again")
-                                print("0 - Cancel")
-
-                                choice = self.get_choice([0, 1])
-                                if choice == 1:
-                                    continue
-                                break
-
-                            self.user_service.update_password_by_id(
-                                self.current_user.id, new_password
-                            )
-
-                            print("Password updated successfully")
-                            break
+                        self.change_user_password()
+                        continue
 
             if self.current_user.role == "admin":
                 self.menu.admin_menu()
@@ -115,7 +119,7 @@ class AppController:
 
                 match choice:
                     case 0:
-                        pass
+                        self.logout_current_session()
                     case 1:
                         pass
                     case 2:
