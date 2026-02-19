@@ -14,6 +14,7 @@ class AppController:
         user_service: UserService,
         session_service: SessionService,
     ) -> None:
+        self.runnig: bool = True
         self.user_service: UserService = user_service
         self.session_service: SessionService = session_service
         self.menu: Menu = Menu()
@@ -24,6 +25,9 @@ class AppController:
     def start(self) -> None:
         self.bootstrap()
         self.main_loop()
+
+    def shutdown_system(self):
+        self.runnig = False
 
     def bootstrap(self) -> None:
         seed = Seed(self.user_service)
@@ -85,7 +89,7 @@ class AppController:
             break
 
     def main_loop(self) -> None:
-        while True:
+        while self.runnig:
 
             if not self.current_session:
                 self.menu.public_menu()
