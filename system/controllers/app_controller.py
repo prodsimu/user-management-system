@@ -64,6 +64,7 @@ class AppController:
             break
 
     def logout_current_session(self) -> None:
+        self.menu.logout_message()
         self.session_service.logout(self.current_session.id)
         self.session_service.delete_all_user_sessions(self.current_user.id)
         self.current_session = None
@@ -90,7 +91,6 @@ class AppController:
 
             match choice:
                 case 0:
-                    self.menu.logout_message()
                     self.logout_current_session()
                     break
 
