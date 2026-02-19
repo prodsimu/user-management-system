@@ -26,7 +26,8 @@ class AppController:
         self.bootstrap()
         self.main_loop()
 
-    def shutdown_system(self):
+    def shutdown_system(self) -> None:
+        self.menu.shutdown()
         self.runnig = False
 
     def bootstrap(self) -> None:
@@ -97,9 +98,8 @@ class AppController:
 
                 match choice:
                     case 0:
-                        self.menu.shutdown()
-                        return
-
+                        self.shutdown_system()
+                        continue
                     case 1:
                         pass
 
