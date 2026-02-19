@@ -1,6 +1,10 @@
+import os
+
+
 class Menu:
 
     def start_app(self) -> None:
+        self.clear_screen()
         print("=== SYSTEM INITIALIZED ===")
         print("Admin created automatically:")
         print("username: admin")
@@ -8,7 +12,8 @@ class Menu:
         print("Logging in...\n")
 
     def admin_menu(self) -> None:
-        print("ADMIN MENU")
+        self.clear_screen()
+        print("=== ADMIN MENU ===")
         print("1 - Create user")
         print("2 - List users")
         print("3 - Update user")
@@ -16,10 +21,14 @@ class Menu:
         print("0 - Logout")
 
     def user_menu(self) -> None:
+        self.clear_screen()
+        print("=== USER MENU ===")
         print("1 - Change password")
         print("0 - Logout")
 
     def public_menu(self) -> None:
+        self.clear_screen()
+        print("=== PUBLIC MENU ===")
         print("1 - Login")
         print("0 - Exit")
 
@@ -34,3 +43,6 @@ class Menu:
         password = input("Password: ")
 
         return username, password
+
+    def clear_screen(self):
+        os.system("cls" if os.name == "nt" else "clear")
