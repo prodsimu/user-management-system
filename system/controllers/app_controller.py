@@ -28,7 +28,7 @@ class AppController:
         self.main_loop()
 
     def shutdown_system(self) -> None:
-        self.menu.shutdown()
+        self.menu.shutdown_message()
         self.runnig = False
 
     def bootstrap(self) -> None:
@@ -39,25 +39,6 @@ class AppController:
             self.menu.start_app()
             self.current_session = self.session_service.create_session(admin.id)
             self.current_user = admin
-
-    def logout_current_session(self) -> None:
-        self.session_service.logout(self.current_session.id)
-        self.session_service.delete_all_user_sessions(self.current_user.id)
-        self.current_session = None
-        self.current_user = None
-
-    def get_choice(self, valid_options: list) -> int:
-        choice = None
-
-        while choice not in valid_options:
-            try:
-                choice = int(input("Choose an option: "))
-                if choice not in valid_options:
-                    print("\nChoose a valid option\n")
-            except ValueError:
-                print("\nChoose a valid option\n")
-
-        return choice
 
     def change_user_password(self) -> None:
         while True:
@@ -82,6 +63,40 @@ class AppController:
             print("Password updated successfully")
             break
 
+    def logout_current_session(self) -> None:
+        self.session_service.logout(self.current_session.id)
+        self.session_service.delete_all_user_sessions(self.current_user.id)
+        self.current_session = None
+        self.current_user = None
+
+    def get_choice(self, valid_options: list) -> int:
+        choice = None
+
+        while choice not in valid_options:
+            try:
+                choice = int(input("Choose an option: "))
+                if choice not in valid_options:
+                    print("\nChoose a valid option\n")
+            except ValueError:
+                print("\nChoose a valid option\n")
+
+        return choice
+
+    def user_flow(self) -> None:
+        while self.current_user:
+
+            self.menu.user_menu()
+            choice = self.get_choice([0, 1])
+
+            match choice:
+                case 0:
+                    self.menu.logout_message()
+                    self.logout_current_session()
+                    break
+
+                case 1:
+                    self.change_user_password()
+
     def main_loop(self) -> None:
         while self.runnig:
 
@@ -96,21 +111,10 @@ class AppController:
                     case 1:
                         pass
 
-            if self.current_user.role == "user":
-                self.menu.user_menu()
-                choice = self.get_choice([0, 1])
+            elif self.current_user.role == "user":
+                self.user_flow()
 
-                match choice:
-                    case 0:
-                        self.menu.logout_message()
-                        self.logout_current_session()
-                        continue
-
-                    case 1:
-                        self.change_user_password()
-                        continue
-
-            if self.current_user.role == "admin":
+            elif self.current_user.role == "admin":
                 self.menu.admin_menu()
                 choice = self.get_choice([0, 1, 2, 3, 4])
 
