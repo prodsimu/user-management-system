@@ -35,7 +35,7 @@ class Menu:
     def logout_message(self) -> None:
         print("Exiting session...")
 
-    def shutdown(self) -> None:
+    def shutdown_message(self) -> None:
         print("Shutting down system...")
 
     def login_interface(self) -> None:
