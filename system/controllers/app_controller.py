@@ -5,6 +5,7 @@ from services.user_service import UserService
 from services.session_service import SessionService
 from seed.seed import Seed
 from ui.menu import Menu
+from exceptions.exceptions import InvalidPasswordError, SamePasswordError
 
 
 class AppController:
@@ -41,6 +42,7 @@ class AppController:
 
     def logout_current_session(self) -> None:
         self.session_service.logout(self.current_session.id)
+        self.session_service.delete_all_user_sessions(self.current_user.id)
         self.current_session = None
         self.current_user = None
 
@@ -59,32 +61,23 @@ class AppController:
 
     def change_user_password(self) -> None:
         while True:
-            current_password = input("Type your current password: ")
-
-            if current_password != self.current_user.password:
-                print("Invalid password")
-                print("1 - Try again")
-                print("0 - Cancel")
-
-                choice = self.get_choice([0, 1])
-                if choice == 1:
-                    continue
-                break
-
-            new_password = input("Type the new password: ")
+            new_password = input("\nType the new password: ")
             verify_password = input("Confirm the password: ")
 
             if new_password != verify_password:
                 print("Passwords do not match")
-                print("1 - Try again")
-                print("0 - Cancel")
+                continue
 
-                choice = self.get_choice([0, 1])
-                if choice == 1:
-                    continue
-                break
-
-            self.user_service.update_password_by_id(self.current_user.id, new_password)
+            try:
+                self.user_service.update_password_by_id(
+                    self.current_user.id, new_password
+                )
+            except InvalidPasswordError as e:
+                print(e)
+                continue
+            except SamePasswordError as e:
+                print(e)
+                continue
 
             print("Password updated successfully")
             break
