@@ -1,0 +1,14 @@
+class AppError(Exception):
+    pass
+
+
+class UserNotFoundError(AppError):
+    pass
+
+
+class InvalidPasswordError(AppError):
+    pass
+
+
+class SamePasswordError(AppError):
+    pass

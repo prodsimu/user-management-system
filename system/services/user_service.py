@@ -3,6 +3,7 @@ from models.user import User
 from models.session import Session
 from repositories.user_repository import UserRepository
 from services.session_service import SessionService
+from exceptions.exceptions import *
 
 
 class UserService:
@@ -95,28 +96,23 @@ class UserService:
         self.user_repository.update_by_id(user_id, data)
         return True
 
-    def update_password_by_id(self, user_id: int, new_password: str) -> bool:
+    def update_password_by_id(self, user_id: int, new_password: str) -> None:
         user = self.get_user_by_id(user_id)
-
         if not user:
-            return False
+            raise UserNotFoundError()
 
-        if not new_password:
-            return False
+        if not new_password or not new_password.strip():
+            raise InvalidPasswordError("Password cannot be empty")
 
         new_password = new_password.strip()
 
-        if not new_password:
-            return False
-
         if len(new_password) < 6:
-            raise ValueError("Password must be at least 6 characters long")
+            raise InvalidPasswordError("Password must have at least 6 characters")
 
         if user.verify_password(new_password):
-            return False
+            raise SamePasswordError("New password cannot be the same as current")
 
         user.change_password(new_password)
-        return True
 
     def update_password_by_password(
         self, username: str, current_password: str, new_password: str
