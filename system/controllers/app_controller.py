@@ -54,16 +54,16 @@ class AppController:
     def main_loop(self) -> None:
         while self.runnig:
 
-            self.menu.clear_screen()
+            # self.menu.clear_screen()
 
             if not self.current_session:
                 self.handle_public_flow()
-                continue
 
             elif self.current_user.role == "user":
                 self.user_flow()
 
             elif self.current_user.role == "admin":
+
                 if self.first_system_startup:
                     self.menu.start_app()
                     self.first_system_startup = False
@@ -106,7 +106,8 @@ class AppController:
             case 1:
                 pass
             case 2:
-                pass
+                for user in self.user_service.list_users():
+                    self.menu.show_user_description(user)
             case 3:
                 pass
             case 4:
