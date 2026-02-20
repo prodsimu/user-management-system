@@ -14,6 +14,10 @@ class InvalidUsernameError(AppError):
     pass
 
 
+class InvalidNameError(AppError):
+    pass
+
+
 class SamePasswordError(AppError):
     pass
 
