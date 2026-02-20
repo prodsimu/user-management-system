@@ -180,3 +180,18 @@ class AppController:
                 print("\nChoose a valid option\n")
 
         return choice
+
+    def get_user_data_to_creation(self) -> str:
+        name = input()
+        username = input()
+        password = input()
+
+        return name, username, password
+
+    def create_new_user(self) -> None:
+        name, username, password = self.get_user_data_to_creation()
+
+        try:
+            self.user_service.create_user(name, username, password)
+        except AppError as e:
+            self.menu.show_error(str(e))
