@@ -173,15 +173,14 @@ class UserService:
 
     # DELETE
 
-    def delete_user_by_id(self, user_id: int) -> bool:
+    def delete_user_by_id(self, user_id: int) -> None:
         user = self.get_user_by_id(user_id)
 
         if not user:
-            return False
+            raise UserNotFoundError("User not found")
 
         self.user_repository.delete(user_id)
         self.session_service.delete_all_user_sessions(user_id)
-        return True
 
     # AUTH / BUSINESS RULES
 
