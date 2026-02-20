@@ -1,4 +1,5 @@
 import os
+from models.user import User
 
 
 class Menu:
@@ -45,3 +46,14 @@ class Menu:
 
     def clear_screen(self):
         os.system("cls" if os.name == "nt" else "clear")
+
+    def show_user_description(self, user: User) -> None:
+        print("\n------------------------------")
+        print(f"ID ----------- {user.id}")
+        print(f"Name --------- {user.name}")
+        print(f"Username ----- {user.username}")
+        print(f"Password ----- {user.password}")
+        print(f"Role --------- {user.role}")
+        print(f"Active ------- {user.active}")
+        print(f"Login Attempts {user.login_attempts}")
+        print("------------------------------")
