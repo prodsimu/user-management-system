@@ -28,3 +28,7 @@ class EmptyLoginCredentialsError(AppError):
 
 class InactiveUserError(AppError):
     pass
+
+
+class UsernameAlreadyExistsError(AppError):
+    pass
