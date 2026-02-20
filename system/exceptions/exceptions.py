@@ -16,3 +16,7 @@ class SamePasswordError(AppError):
 
 class EmptyLoginCredentialsError(AppError):
     pass
+
+
+class InactiveUserError(AppError):
+    pass
