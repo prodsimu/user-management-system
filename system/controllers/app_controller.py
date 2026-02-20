@@ -89,16 +89,28 @@ class AppController:
 
         return choice
 
+    def handle_public_flow(self) -> None:
+        self.menu.clear_screen()
+        self.menu.public_menu()
+        choice = self.get_choice([0, 1])
+
+        match choice:
+            case 0:
+                self.shutdown_system()
+            case 1:
+                self.new_login()
+
     def user_flow(self) -> None:
         while self.current_user:
 
+            self.menu.clear_screen()
             self.menu.user_menu()
             choice = self.get_choice([0, 1])
 
             match choice:
                 case 0:
                     self.logout_current_session()
-                    break
+                    return
 
                 case 1:
                     self.change_user_password()
@@ -127,15 +139,8 @@ class AppController:
         while self.runnig:
 
             if not self.current_session:
-                self.menu.public_menu()
-                choice = self.get_choice([0, 1])
-
-                match choice:
-                    case 0:
-                        self.shutdown_system()
-                        continue
-                    case 1:
-                        self.new_login()
+                self.handle_public_flow()
+                continue
 
             elif self.current_user.role == "user":
                 self.user_flow()
