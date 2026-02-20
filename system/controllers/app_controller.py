@@ -54,8 +54,6 @@ class AppController:
     def main_loop(self) -> None:
         while self.runnig:
 
-            # self.menu.clear_screen()
-
             if not self.current_session:
                 self.handle_public_flow()
 
@@ -104,7 +102,7 @@ class AppController:
             case 0:
                 self.logout_current_session()
             case 1:
-                pass
+                self.create_new_user()
             case 2:
                 for user in self.user_service.list_users():
                     self.menu.show_user_description(user)
@@ -143,6 +141,14 @@ class AppController:
 
     # USER ACTIONS
 
+    def create_new_user(self) -> None:
+        name, username, password = self.menu.get_user_data_to_creation()
+
+        try:
+            self.user_service.create_user(name, username, password)
+        except AppError as e:
+            self.menu.show_error(str(e))
+
     def change_user_password(self) -> None:
         while True:
             new_password = input("\nType the new password: ")
@@ -180,18 +186,3 @@ class AppController:
                 print("\nChoose a valid option\n")
 
         return choice
-
-    def get_user_data_to_creation(self) -> str:
-        name = input()
-        username = input()
-        password = input()
-
-        return name, username, password
-
-    def create_new_user(self) -> None:
-        name, username, password = self.get_user_data_to_creation()
-
-        try:
-            self.user_service.create_user(name, username, password)
-        except AppError as e:
-            self.menu.show_error(str(e))
