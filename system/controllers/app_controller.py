@@ -105,8 +105,7 @@ class AppController:
             case 1:
                 self.create_new_user()
             case 2:
-                for user in self.user_service.list_users():
-                    self.menu.show_user_description(user)
+                self.list_all_users()
             case 3:
                 pass
             case 4:
@@ -187,3 +186,7 @@ class AppController:
                 print("\nChoose a valid option\n")
 
         return choice
+
+    def list_all_users(self) -> None:
+        for user in self.user_service.list_users():
+            self.menu.show_user_description(user)
