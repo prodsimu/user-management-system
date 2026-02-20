@@ -5,7 +5,13 @@ from services.user_service import UserService
 from services.session_service import SessionService
 from seed.seed import Seed
 from ui.menu import Menu
-from exceptions.exceptions import InvalidPasswordError, SamePasswordError
+from exceptions.exceptions import (
+    InvalidPasswordError,
+    SamePasswordError,
+    UserNotFoundError,
+    InactiveUserError,
+    AppError,
+)
 
 
 class AppController:
@@ -97,6 +103,26 @@ class AppController:
                 case 1:
                     self.change_user_password()
 
+    def new_login(self) -> None:
+
+        while True:
+
+            username, password = self.menu.login_interface()
+
+            try:
+                self.current_session = self.user_service.login(username, password)
+                self.current_user = self.user_service.get_user_by_session_id(
+                    self.current_session.id
+                )
+                return
+
+            except InactiveUserError as e:
+                self.menu.show_error(str(e))
+                return
+
+            except AppError as e:
+                self.menu.show_error(str(e))
+
     def main_loop(self) -> None:
         while self.runnig:
 
@@ -109,7 +135,7 @@ class AppController:
                         self.shutdown_system()
                         continue
                     case 1:
-                        pass
+                        self.new_login()
 
             elif self.current_user.role == "user":
                 self.user_flow()
