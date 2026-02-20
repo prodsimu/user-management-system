@@ -12,3 +12,7 @@ class InvalidPasswordError(AppError):
 
 class SamePasswordError(AppError):
     pass
+
+
+class EmptyLoginCredentialsError(AppError):
+    pass
