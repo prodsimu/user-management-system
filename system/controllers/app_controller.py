@@ -52,6 +52,11 @@ class AppController:
     # MAIN LOOP
 
     def main_loop(self) -> None:
+
+        if self.first_system_startup:
+            self.menu.start_app()
+            self.first_system_startup = False
+
         while self.runnig:
 
             if not self.current_session:
@@ -61,10 +66,6 @@ class AppController:
                 self.user_flow()
 
             elif self.current_user.role == "admin":
-
-                if self.first_system_startup:
-                    self.menu.start_app()
-                    self.first_system_startup = False
 
                 self.admin_flow()
 
