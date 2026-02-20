@@ -135,6 +135,23 @@ class AppController:
             except AppError as e:
                 self.menu.show_error(str(e))
 
+    def admin_flow(self) -> None:
+        self.menu.clear_screen()
+        self.menu.admin_menu()
+        choice = self.get_choice([0, 1, 2, 3, 4])
+
+        match choice:
+            case 0:
+                self.logout_current_session()
+            case 1:
+                pass
+            case 2:
+                pass
+            case 3:
+                pass
+            case 4:
+                pass
+
     def main_loop(self) -> None:
         while self.runnig:
 
@@ -146,17 +163,4 @@ class AppController:
                 self.user_flow()
 
             elif self.current_user.role == "admin":
-                self.menu.admin_menu()
-                choice = self.get_choice([0, 1, 2, 3, 4])
-
-                match choice:
-                    case 0:
-                        self.logout_current_session()
-                    case 1:
-                        pass
-                    case 2:
-                        pass
-                    case 3:
-                        pass
-                    case 4:
-                        pass
+                self.admin_flow()
