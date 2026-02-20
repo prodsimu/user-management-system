@@ -6,11 +6,10 @@ from services.session_service import SessionService
 from seed.seed import Seed
 from ui.menu import Menu
 from exceptions.exceptions import (
+    AppError,
+    InactiveUserError,
     InvalidPasswordError,
     SamePasswordError,
-    UserNotFoundError,
-    InactiveUserError,
-    AppError,
 )
 
 
@@ -29,6 +28,8 @@ class AppController:
         self.current_session: Optional[Session] = None
         self.current_user: Optional[User] = None
 
+    # PUBLIC ENTRYPOINTS
+
     def start(self) -> None:
         self.bootstrap()
         self.main_loop()
@@ -36,6 +37,8 @@ class AppController:
     def shutdown_system(self) -> None:
         self.menu.shutdown_message()
         self.runnig = False
+
+    # INITIALIZATION
 
     def bootstrap(self) -> None:
         seed = Seed(self.user_service)
@@ -46,48 +49,22 @@ class AppController:
             self.current_session = self.session_service.create_session(admin.id)
             self.current_user = admin
 
-    def change_user_password(self) -> None:
-        while True:
-            new_password = input("\nType the new password: ")
-            verify_password = input("Confirm the password: ")
+    # MAIN LOOP
 
-            if new_password != verify_password:
-                print("Passwords do not match")
+    def main_loop(self) -> None:
+        while self.runnig:
+
+            if not self.current_session:
+                self.handle_public_flow()
                 continue
 
-            try:
-                self.user_service.update_password_by_id(
-                    self.current_user.id, new_password
-                )
-            except InvalidPasswordError as e:
-                print(e)
-                continue
-            except SamePasswordError as e:
-                print(e)
-                continue
+            elif self.current_user.role == "user":
+                self.user_flow()
 
-            print("Password updated successfully")
-            break
+            elif self.current_user.role == "admin":
+                self.admin_flow()
 
-    def logout_current_session(self) -> None:
-        self.menu.logout_message()
-        self.session_service.logout(self.current_session.id)
-        self.session_service.delete_all_user_sessions(self.current_user.id)
-        self.current_session = None
-        self.current_user = None
-
-    def get_choice(self, valid_options: list) -> int:
-        choice = None
-
-        while choice not in valid_options:
-            try:
-                choice = int(input("Choose an option: "))
-                if choice not in valid_options:
-                    print("\nChoose a valid option\n")
-            except ValueError:
-                print("\nChoose a valid option\n")
-
-        return choice
+    # FLOWS
 
     def handle_public_flow(self) -> None:
         self.menu.clear_screen()
@@ -115,8 +92,26 @@ class AppController:
                 case 1:
                     self.change_user_password()
 
-    def new_login(self) -> None:
+    def admin_flow(self) -> None:
+        self.menu.clear_screen()
+        self.menu.admin_menu()
+        choice = self.get_choice([0, 1, 2, 3, 4])
 
+        match choice:
+            case 0:
+                self.logout_current_session()
+            case 1:
+                pass
+            case 2:
+                pass
+            case 3:
+                pass
+            case 4:
+                pass
+
+    # AUTH ACTIONS
+
+    def new_login(self) -> None:
         while True:
 
             username, password = self.menu.login_interface()
@@ -135,32 +130,49 @@ class AppController:
             except AppError as e:
                 self.menu.show_error(str(e))
 
-    def admin_flow(self) -> None:
-        self.menu.clear_screen()
-        self.menu.admin_menu()
-        choice = self.get_choice([0, 1, 2, 3, 4])
+    def logout_current_session(self) -> None:
+        self.menu.logout_message()
+        self.session_service.logout(self.current_session.id)
+        self.session_service.delete_all_user_sessions(self.current_user.id)
+        self.current_session = None
+        self.current_user = None
 
-        match choice:
-            case 0:
-                self.logout_current_session()
-            case 1:
-                pass
-            case 2:
-                pass
-            case 3:
-                pass
-            case 4:
-                pass
+    # USER ACTIONS
 
-    def main_loop(self) -> None:
-        while self.runnig:
+    def change_user_password(self) -> None:
+        while True:
+            new_password = input("\nType the new password: ")
+            verify_password = input("Confirm the password: ")
 
-            if not self.current_session:
-                self.handle_public_flow()
+            if new_password != verify_password:
+                print("Passwords do not match")
                 continue
 
-            elif self.current_user.role == "user":
-                self.user_flow()
+            try:
+                self.user_service.update_password_by_id(
+                    self.current_user.id, new_password
+                )
+            except InvalidPasswordError as e:
+                print(e)
+                continue
+            except SamePasswordError as e:
+                print(e)
+                continue
 
-            elif self.current_user.role == "admin":
-                self.admin_flow()
+            print("Password updated successfully")
+            break
+
+    # UTILITIES
+
+    def get_choice(self, valid_options: list) -> int:
+        choice = None
+
+        while choice not in valid_options:
+            try:
+                choice = int(input("Choose an option: "))
+                if choice not in valid_options:
+                    print("\nChoose a valid option\n")
+            except ValueError:
+                print("\nChoose a valid option\n")
+
+        return choice
