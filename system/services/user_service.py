@@ -75,26 +75,25 @@ class UserService:
 
     # UPDATE
 
-    def update_username_by_id(self, user_id: int, new_username: str) -> bool:
+    def update_username_by_id(self, user_id: int, new_username: str) -> None:
         user = self.get_user_by_id(user_id)
 
         if not user:
-            return False
+            raise UserNotFoundError("User not found")
 
         if not new_username:
-            return False
+            raise InvalidUsernameError("Invalid username")
 
         new_username = new_username.strip()
 
         if not new_username:
-            return False
+            raise InvalidUsernameError("Invalid username")
 
         if self.user_repository.exists_by_field("username", new_username):
-            return False
+            raise UsernameAlreadyExistsError("User already exists")
 
         data = {"username": new_username}
         self.user_repository.update_by_id(user_id, data)
-        return True
 
     def update_password_by_id(self, user_id: int, new_password: str) -> None:
         user = self.get_user_by_id(user_id)
