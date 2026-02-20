@@ -75,6 +75,23 @@ class UserService:
 
     # UPDATE
 
+    def update_name_by_id(self, user_id: int, new_name: str) -> None:
+        user = self.get_user_by_id(user_id)
+
+        if not user:
+            raise UserNotFoundError("User not found")
+
+        if not new_name:
+            raise InvalidNameError("Invalid name")
+
+        new_name = new_name.strip()
+
+        if not new_name:
+            raise InvalidNameError("Invalid name")
+
+        data = {"name": new_name}
+        self.user_repository.update_by_id(user_id, data)
+
     def update_username_by_id(self, user_id: int, new_username: str) -> None:
         user = self.get_user_by_id(user_id)
 
