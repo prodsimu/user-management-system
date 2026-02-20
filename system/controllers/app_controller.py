@@ -21,6 +21,7 @@ class AppController:
         session_service: SessionService,
     ) -> None:
         self.runnig: bool = True
+        self.first_system_startup: bool = True
         self.user_service: UserService = user_service
         self.session_service: SessionService = session_service
         self.menu: Menu = Menu()
@@ -45,7 +46,6 @@ class AppController:
         admin = seed.run_seed()
 
         if admin:
-            self.menu.start_app()
             self.current_session = self.session_service.create_session(admin.id)
             self.current_user = admin
 
@@ -53,6 +53,8 @@ class AppController:
 
     def main_loop(self) -> None:
         while self.runnig:
+
+            self.menu.clear_screen()
 
             if not self.current_session:
                 self.handle_public_flow()
@@ -62,12 +64,15 @@ class AppController:
                 self.user_flow()
 
             elif self.current_user.role == "admin":
+                if self.first_system_startup:
+                    self.menu.start_app()
+                    self.first_system_startup = False
+
                 self.admin_flow()
 
     # FLOWS
 
     def handle_public_flow(self) -> None:
-        self.menu.clear_screen()
         self.menu.public_menu()
         choice = self.get_choice([0, 1])
 
@@ -80,7 +85,6 @@ class AppController:
     def user_flow(self) -> None:
         while self.current_user:
 
-            self.menu.clear_screen()
             self.menu.user_menu()
             choice = self.get_choice([0, 1])
 
@@ -93,7 +97,6 @@ class AppController:
                     self.change_user_password()
 
     def admin_flow(self) -> None:
-        self.menu.clear_screen()
         self.menu.admin_menu()
         choice = self.get_choice([0, 1, 2, 3, 4])
 
