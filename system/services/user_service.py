@@ -193,7 +193,7 @@ class UserService:
         user = self.user_repository.get_by_field("username", username)
 
         if not user:
-            raise UserNotFoundError("Incorrect username or password")
+            raise UserNotFoundError("User not found")
 
         if not user.active:
             raise InactiveUserError("User is blocked")
@@ -205,7 +205,7 @@ class UserService:
                 user.deactivate()
                 raise InactiveUserError("User blocked due to too many attempts")
 
-            raise InvalidPasswordError("Incorrect username or password")
+            raise InvalidPasswordError("Incorrect password")
 
         user.reset_login_attempts()
 
