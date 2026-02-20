@@ -185,27 +185,27 @@ class UserService:
 
     # AUTH / BUSINESS RULES
 
-    def login(self, username: str, password: str) -> Optional[Session]:
+    def login(self, username: str, password: str) -> Session:
 
         if not username or not password:
-            raise ValueError("Username and password required")
+            raise EmptyLoginCredentialsError("Username and password required")
 
         user = self.user_repository.get_by_field("username", username)
 
         if not user:
-            return None
+            raise UserNotFoundError("Incorrect username or password")
 
         if not user.active:
-            raise PermissionError("User is blocked")
+            raise InactiveUserError("User is blocked")
 
         if not user.verify_password(password):
             user.increment_login_attempts()
 
             if user.login_attempts >= self.MAX_LOGIN_ATTEMPTS:
                 user.deactivate()
-                raise PermissionError("User blocked due to too many attempts")
+                raise InactiveUserError("User blocked due to too many attempts")
 
-            return None
+            raise InvalidPasswordError("Incorrect username or password")
 
         user.reset_login_attempts()
 
