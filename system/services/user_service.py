@@ -114,19 +114,6 @@ class UserService:
 
         user.change_password(new_password)
 
-    def update_password_by_password(
-        self, username: str, current_password: str, new_password: str
-    ) -> None:
-        user = self.get_user_by_username(username)
-
-        if not user:
-            raise ValueError("User not found")
-
-        if user.password != current_password:
-            raise PermissionError("Invalid password")
-
-        self.update_password_by_id(user.id, new_password)
-
     def activate_user_by_id(self, user_id: int) -> bool:
         user = self.get_user_by_id(user_id)
 
