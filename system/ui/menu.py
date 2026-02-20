@@ -35,11 +35,18 @@ class Menu:
     def shutdown_message(self) -> None:
         print("Shutting down system...")
 
-    def login_interface(self) -> None:
+    def login_interface(self) -> str:
         username = input("Username: ")
         password = input("Password: ")
 
         return username, password
+
+    def get_user_data_to_creation(self) -> str:
+        name = input("Name: ")
+        username = input("Username: ")
+        password = input("Password: ")
+
+        return name, username, password
 
     def show_error(self, message: str) -> None:
         print(f"\n{message}\n")
