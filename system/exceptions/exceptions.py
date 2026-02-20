@@ -10,6 +10,10 @@ class InvalidPasswordError(AppError):
     pass
 
 
+class InvalidUsernameError(AppError):
+    pass
+
+
 class SamePasswordError(AppError):
     pass
 
