@@ -32,3 +32,7 @@ class InactiveUserError(AppError):
 
 class UsernameAlreadyExistsError(AppError):
     pass
+
+
+class UserAlreadyActiveError(AppError):
+    pass
