@@ -64,3 +64,11 @@ class Menu:
         print(f"Active ------- {user.active}")
         print(f"Login Attempts {user.login_attempts}")
         print("------------------------------")
+
+    def update_user_interface(self) -> None:
+        print("1 - Update name")
+        print("2 - Update username")
+        print("3 - Update password")
+        print("4 - Change role")
+        print("5 - Activate/Deactivate")
+        print("6 - Reset login attempts")
