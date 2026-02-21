@@ -23,6 +23,7 @@ class AppController:
     ) -> None:
         self.runnig: bool = True
         self.first_system_startup: bool = True
+        self.last_message: Optional[str] = None
         self.user_service: UserService = user_service
         self.session_service: SessionService = session_service
         self.menu: Menu = Menu()
@@ -55,6 +56,7 @@ class AppController:
     def main_loop(self) -> None:
 
         if self.first_system_startup:
+            self.menu.clear_screen()
             self.menu.start_app()
             self.first_system_startup = False
 
@@ -67,13 +69,12 @@ class AppController:
                 self.user_flow()
 
             elif self.current_user.role == "admin":
-
                 self.admin_flow()
 
     # FLOWS
 
     def handle_public_flow(self) -> None:
-        self.menu.public_menu()
+        self.render_menu(self.menu.public_menu)
         choice = self.get_choice([0, 1])
 
         match choice:
@@ -84,8 +85,7 @@ class AppController:
 
     def user_flow(self) -> None:
         while self.current_user:
-
-            self.menu.user_menu()
+            self.render_menu(self.menu.user_menu)
             choice = self.get_choice([0, 1])
 
             match choice:
@@ -97,25 +97,26 @@ class AppController:
                     self.change_user_password()
 
     def admin_flow(self) -> None:
-        self.menu.admin_menu()
-        choice = self.get_choice([0, 1, 2, 3, 4])
+        while self.current_user and self.current_user.role == "admin":
+            self.render_menu(self.menu.admin_menu)
+            choice = self.get_choice([0, 1, 2, 3, 4])
 
-        match choice:
-            case 0:
-                self.menu.clear_screen()
-                self.logout_current_session()
-            case 1:
-                self.menu.clear_screen()
-                self.create_new_user()
-            case 2:
-                self.menu.clear_screen()
-                self.list_all_users()
-            case 3:
-                self.menu.clear_screen()
-                self.update_user()
-            case 4:
-                self.menu.clear_screen()
-                self.delete_user()
+            match choice:
+                case 0:
+                    self.logout_current_session()
+                    return
+
+                case 1:
+                    self.create_new_user()
+
+                case 2:
+                    self.list_all_users()
+
+                case 3:
+                    self.update_user()
+
+                case 4:
+                    self.delete_user()
 
     # AUTH ACTIONS
 
@@ -267,3 +268,13 @@ class AppController:
                 print("\nChoose a valid option\n")
 
         return choice
+
+    def render_menu(self, menu_function) -> None:
+        self.menu.clear_screen()
+
+        if self.last_message:
+            print(self.last_message)
+            print()
+            self.last_message = None
+
+        menu_function()
