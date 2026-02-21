@@ -171,6 +171,12 @@ class UserService:
 
         user.change_role(new_role)
 
+    def reset_login_attempts_by_id(self, user_id: int) -> None:
+        user = self.get_user_by_id(user_id)
+        if not user:
+            raise UserNotFoundError("User not found")
+        user.reset_login_attempts()
+
     # DELETE
 
     def delete_user_by_id(self, user_id: int) -> None:
