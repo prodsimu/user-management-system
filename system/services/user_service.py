@@ -141,17 +141,16 @@ class UserService:
 
         user.activate()
 
-    def deactivate_user_by_id(self, user_id: int) -> bool:
+    def deactivate_user_by_id(self, user_id: int) -> None:
         user = self.get_user_by_id(user_id)
 
         if not user:
-            return False
+            raise UserNotFoundError("User not found")
 
         if not user.active:
-            return False
+            raise UsernameAlreadyDeactiveError("User already deactive")
 
         user.deactivate()
-        return True
 
     def change_role_by_id(self, user_id: int, new_role: str) -> bool:
         user = self.get_user_by_id(user_id)
