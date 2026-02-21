@@ -18,6 +18,10 @@ class InvalidNameError(AppError):
     pass
 
 
+class InvalidRoleError(AppError):
+    pass
+
+
 class SamePasswordError(AppError):
     pass
 
@@ -31,4 +35,12 @@ class InactiveUserError(AppError):
 
 
 class UsernameAlreadyExistsError(AppError):
+    pass
+
+
+class UserAlreadyActiveError(AppError):
+    pass
+
+
+class UsernameAlreadyDeactiveError(AppError):
     pass

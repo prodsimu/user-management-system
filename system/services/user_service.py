@@ -130,49 +130,46 @@ class UserService:
 
         user.change_password(new_password)
 
-    def activate_user_by_id(self, user_id: int) -> bool:
+    def activate_user_by_id(self, user_id: int) -> None:
         user = self.get_user_by_id(user_id)
 
         if not user:
-            return False
+            raise UserNotFoundError("User not found")
 
         if user.active:
-            return False
+            raise UserAlreadyActiveError("User already active")
 
         user.activate()
-        return True
 
-    def deactivate_user_by_id(self, user_id: int) -> bool:
+    def deactivate_user_by_id(self, user_id: int) -> None:
         user = self.get_user_by_id(user_id)
 
         if not user:
-            return False
+            raise UserNotFoundError("User not found")
 
         if not user.active:
-            return False
+            raise UsernameAlreadyDeactiveError("User already deactive")
 
         user.deactivate()
-        return True
 
-    def change_role_by_id(self, user_id: int, new_role: str) -> bool:
+    def change_role_by_id(self, user_id: int, new_role: str) -> None:
         user = self.get_user_by_id(user_id)
 
         if not user:
-            return False
+            raise UserNotFoundError("User not found")
 
         if not new_role or not new_role.strip():
-            return False
+            raise InvalidRoleError("Invalid role")
 
         new_role = new_role.strip().lower()
 
         if new_role not in self.VALID_ROLES:
-            return False
+            raise InvalidRoleError("Invalid role")
 
         if user.role == new_role:
-            return False
+            raise InvalidRoleError(f"Role already {new_role}")
 
         user.change_role(new_role)
-        return True
 
     # DELETE
 
