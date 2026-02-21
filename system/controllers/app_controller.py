@@ -111,7 +111,8 @@ class AppController:
                 self.menu.clear_screen()
                 self.list_all_users()
             case 3:
-                pass
+                self.menu.clear_screen()
+                self.update_user()
             case 4:
                 self.menu.clear_screen()
                 self.delete_user()
@@ -198,6 +199,59 @@ class AppController:
             print("\nUser deleted with sucess")
         except UserNotFoundError:
             print("\nUser not found")
+
+    def update_user(self) -> None:
+        try:
+            user_id = int(input("Type user id: "))
+            user = self.user_service.get_user_by_id(user_id)
+
+            if not user:
+                raise UserNotFoundError("User not found")
+
+        except ValueError:
+            print("\nInvalid id\n")
+            return
+        except UserNotFoundError as e:
+            self.menu.show_error(str(e))
+            return
+
+        self.menu.update_user_interface()
+        choice = self.get_choice([0, 1, 2, 3, 4, 5, 6])
+
+        try:
+            match choice:
+                case 0:
+                    return
+
+                case 1:
+                    new_name = input("New name: ")
+                    self.user_service.update_name_by_id(user_id, new_name)
+
+                case 2:
+                    new_username = input("New username: ")
+                    self.user_service.update_username_by_id(user_id, new_username)
+
+                case 3:
+                    new_password = input("New password: ")
+                    self.user_service.update_password_by_id(user_id, new_password)
+
+                case 4:
+                    new_role = input("New role (user/admin): ")
+                    self.user_service.change_role_by_id(user_id, new_role)
+
+                case 5:
+                    if user.active:
+                        self.user_service.deactivate_user_by_id(user_id)
+                    else:
+                        self.user_service.activate_user_by_id(user_id)
+
+                case 6:
+                    self.user_service.reset_login_attempts_by_id(user_id)
+
+            print("\nUser updated successfully\n")
+
+        except AppError as e:
+            self.menu.show_error(str(e))
 
     # UTILITIES
 
