@@ -72,3 +72,4 @@ class Menu:
         print("4 - Change role")
         print("5 - Activate/Deactivate")
         print("6 - Reset login attempts")
+        print("0 - Cancel")
