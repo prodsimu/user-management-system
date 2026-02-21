@@ -18,6 +18,10 @@ class InvalidNameError(AppError):
     pass
 
 
+class InvalidRoleError(AppError):
+    pass
+
+
 class SamePasswordError(AppError):
     pass
 
