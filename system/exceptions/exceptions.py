@@ -36,3 +36,7 @@ class UsernameAlreadyExistsError(AppError):
 
 class UserAlreadyActiveError(AppError):
     pass
+
+
+class UsernameAlreadyDeactiveError(AppError):
+    pass
