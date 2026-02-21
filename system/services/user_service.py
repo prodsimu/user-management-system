@@ -130,17 +130,16 @@ class UserService:
 
         user.change_password(new_password)
 
-    def activate_user_by_id(self, user_id: int) -> bool:
+    def activate_user_by_id(self, user_id: int) -> None:
         user = self.get_user_by_id(user_id)
 
         if not user:
-            return False
+            raise UserNotFoundError("User not found")
 
         if user.active:
-            return False
+            raise UserAlreadyActiveError("User already active")
 
         user.activate()
-        return True
 
     def deactivate_user_by_id(self, user_id: int) -> bool:
         user = self.get_user_by_id(user_id)
