@@ -182,7 +182,12 @@ class AppController:
             self.menu.show_user_description(user)
 
     def show_user_by_id(self, user_id) -> None:
-        user = self.user_service.get_user_by_id(user_id)
+        try:
+            user = self.user_service.get_user_by_id(user_id)
+        except UserNotFoundError as e:
+            self.menu.show_error(str(e))
+            return
+
         self.menu.show_user_description(user)
 
     def delete_user(self) -> None:
