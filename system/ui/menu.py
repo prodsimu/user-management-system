@@ -48,8 +48,8 @@ class Menu:
 
         return name, username, password
 
-    def show_error(self, message: str) -> None:
-        print(f"\n{message}\n")
+    def show_error(self, message: str) -> str:
+        return f"{message}"
 
     def clear_screen(self):
         os.system("cls" if os.name == "nt" else "clear")
