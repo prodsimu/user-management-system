@@ -10,6 +10,7 @@ from exceptions.exceptions import (
     InactiveUserError,
     InvalidPasswordError,
     SamePasswordError,
+    UserNotFoundError,
 )
 
 
@@ -101,15 +102,19 @@ class AppController:
 
         match choice:
             case 0:
+                self.menu.clear_screen()
                 self.logout_current_session()
             case 1:
+                self.menu.clear_screen()
                 self.create_new_user()
             case 2:
+                self.menu.clear_screen()
                 self.list_all_users()
             case 3:
                 pass
             case 4:
-                pass
+                self.menu.clear_screen()
+                self.delete_user()
 
     # AUTH ACTIONS
 
@@ -172,6 +177,19 @@ class AppController:
             print("Password updated successfully")
             break
 
+    def list_all_users(self) -> None:
+        for user in self.user_service.list_users():
+            self.menu.show_user_description(user)
+
+    def delete_user(self) -> None:
+        user_id = int(input("Type user id: "))
+
+        try:
+            self.user_service.delete_user_by_id(user_id)
+            print("\nUser deleted with sucess")
+        except UserNotFoundError:
+            print("\nUser not found")
+
     # UTILITIES
 
     def get_choice(self, valid_options: list) -> int:
@@ -186,7 +204,3 @@ class AppController:
                 print("\nChoose a valid option\n")
 
         return choice
-
-    def list_all_users(self) -> None:
-        for user in self.user_service.list_users():
-            self.menu.show_user_description(user)
