@@ -181,6 +181,10 @@ class AppController:
         for user in self.user_service.list_users():
             self.menu.show_user_description(user)
 
+    def show_user_by_id(self, user_id) -> None:
+        user = self.user_service.get_user_by_id(user_id)
+        self.menu.show_user_description(user)
+
     def delete_user(self) -> None:
         user_id = int(input("Type user id: "))
 
