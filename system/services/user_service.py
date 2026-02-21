@@ -21,23 +21,24 @@ class UserService:
 
     def create_user(self, new_name: str, new_username: str, new_password: str) -> User:
 
-        if new_name is None or new_username is None or new_password is None:
-            raise ValueError("User cannot be created: missing required fields")
-
         new_name = new_name.strip()
         new_username = new_username.strip()
+        new_password = new_password.strip()
 
         if not new_name:
-            raise ValueError("Name cannot be empty")
+            raise InvalidNameError("Name cannot be empty")
 
         if not new_username:
-            raise ValueError("Username cannot be empty")
+            raise InvalidUsernameError("Username cannot be empty")
+
+        if not new_password:
+            raise InvalidPasswordError("Password cannot be empty")
 
         if len(new_password) < 6:
-            raise ValueError("Password must be at least 6 characters long")
+            raise InvalidPasswordError("Password must be at least 6 characters long")
 
         if self.user_repository.exists_by_field("username", new_username):
-            raise ValueError("Username already exists")
+            raise UsernameAlreadyExistsError("Username already exists")
 
         new_user = User(
             id=self.user_repository.get_next_id(),
