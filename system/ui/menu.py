@@ -54,16 +54,18 @@ class Menu:
     def clear_screen(self):
         os.system("cls" if os.name == "nt" else "clear")
 
-    def show_user_description(self, user: User) -> None:
-        print("\n------------------------------")
-        print(f"ID ----------- {user.id}")
-        print(f"Name --------- {user.name}")
-        print(f"Username ----- {user.username}")
-        print(f"Password ----- {user.password}")
-        print(f"Role --------- {user.role}")
-        print(f"Active ------- {user.active}")
-        print(f"Login Attempts {user.login_attempts}")
-        print("------------------------------")
+    def show_user_description(self, user: User) -> str:
+        return (
+            "\n------------------------------\n"
+            f"ID ----------- {user.id}\n"
+            f"Name --------- {user.name}\n"
+            f"Username ----- {user.username}\n"
+            f"Password ----- {user.password}\n"
+            f"Role --------- {user.role}\n"
+            f"Active ------- {user.active}\n"
+            f"Login Attempts {user.login_attempts}\n"
+            "------------------------------"
+        )
 
     def update_user_interface(self) -> None:
         print("1 - Update name")
