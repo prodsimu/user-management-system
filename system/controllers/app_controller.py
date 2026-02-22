@@ -38,7 +38,6 @@ class AppController:
         self.main_loop()
 
     def shutdown_system(self) -> None:
-        self.menu.shutdown_message()
         self.runnig = False
 
     # INITIALIZATION
@@ -70,6 +69,9 @@ class AppController:
 
             elif self.current_user.role == "admin":
                 self.admin_flow()
+
+        self.menu.clear_screen()
+        self.menu.shutdown_message()
 
     # FLOWS
 
@@ -121,26 +123,25 @@ class AppController:
     # AUTH ACTIONS
 
     def new_login(self) -> None:
-        while True:
 
-            username, password = self.menu.login_interface()
+        username, password = self.menu.login_interface()
 
-            try:
-                self.current_session = self.user_service.login(username, password)
-                self.current_user = self.user_service.get_user_by_session_id(
-                    self.current_session.id
-                )
-                return
+        try:
+            self.current_session = self.user_service.login(username, password)
+            self.current_user = self.user_service.get_user_by_session_id(
+                self.current_session.id
+            )
 
-            except InactiveUserError as e:
-                self.menu.show_error(str(e))
-                return
+            self.last_message = "logged in successfully"
 
-            except AppError as e:
-                self.menu.show_error(str(e))
+        except InactiveUserError as e:
+            self.last_message = self.menu.show_error(str(e))
+
+        except AppError as e:
+            self.last_message = self.menu.show_error(str(e))
 
     def logout_current_session(self) -> None:
-        self.menu.logout_message()
+        self.last_message = self.menu.logout_message()
         self.session_service.logout(self.current_session.id)
         self.session_service.delete_all_user_sessions(self.current_user.id)
         self.current_session = None
@@ -153,35 +154,44 @@ class AppController:
 
         try:
             self.user_service.create_user(name, username, password)
+            self.last_message = "user successfully created"
         except AppError as e:
-            self.menu.show_error(str(e))
+            self.last_message = "User cannot be created\n" + self.menu.show_error(
+                str(e)
+            )
 
     def change_user_password(self) -> None:
-        while True:
-            new_password = input("\nType the new password: ")
-            verify_password = input("Confirm the password: ")
+        new_password = input("\nType the new password: ")
+        verify_password = input("Confirm the password: ")
 
-            if new_password != verify_password:
-                print("Passwords do not match")
-                continue
+        if new_password != verify_password:
+            self.last_message = "Passwords do not match"
+            return
 
-            try:
-                self.user_service.update_password_by_id(
-                    self.current_user.id, new_password
-                )
-            except InvalidPasswordError as e:
-                print(e)
-                continue
-            except SamePasswordError as e:
-                print(e)
-                continue
+        try:
+            self.user_service.update_password_by_id(self.current_user.id, new_password)
+        except InvalidPasswordError as e:
+            self.last_message = str(e)
+            return
+        except SamePasswordError as e:
+            self.last_message = str(e)
+            return
 
-            print("Password updated successfully")
-            break
+        self.last_message = "Password updated successfully"
 
     def list_all_users(self) -> None:
-        for user in self.user_service.list_users():
-            self.menu.show_user_description(user)
+        users = self.user_service.list_users()
+
+        if not users:
+            self.last_message = "No users found"
+            return
+
+        messages = []
+
+        for user in users:
+            messages.append(self.menu.show_user_description(user))
+
+        self.last_message = "\n".join(messages)
 
     def show_user_by_id(self, user_id) -> None:
         try:
@@ -197,9 +207,9 @@ class AppController:
 
         try:
             self.user_service.delete_user_by_id(user_id)
-            print("\nUser deleted with sucess")
+            self.last_message = "\nUser deleted with sucess"
         except UserNotFoundError:
-            print("\nUser not found")
+            self.last_message = "\nUser not found"
 
     def update_user(self) -> None:
         try:
@@ -210,49 +220,55 @@ class AppController:
                 raise UserNotFoundError("User not found")
 
         except ValueError:
-            print("\nInvalid id\n")
+            self.last_message = "\nInvalid id\n"
             return
         except UserNotFoundError as e:
-            self.menu.show_error(str(e))
+            self.last_message = self.menu.show_error(str(e))
             return
 
+        self.menu.clear_screen()
         self.menu.update_user_interface()
         choice = self.get_choice([0, 1, 2, 3, 4, 5, 6])
 
         try:
             match choice:
                 case 0:
-                    return
+                    self.last_message = "Canceled action"
 
                 case 1:
                     new_name = input("New name: ")
                     self.user_service.update_name_by_id(user_id, new_name)
+                    self.last_message = "Name successfully updated"
 
                 case 2:
                     new_username = input("New username: ")
                     self.user_service.update_username_by_id(user_id, new_username)
+                    self.last_message = "Username successfully updated"
 
                 case 3:
                     new_password = input("New password: ")
                     self.user_service.update_password_by_id(user_id, new_password)
+                    self.last_message = "Password successfully updated"
 
                 case 4:
                     new_role = input("New role (user/admin): ")
                     self.user_service.change_role_by_id(user_id, new_role)
+                    self.last_message = "Role successfully changed"
 
                 case 5:
                     if user.active:
                         self.user_service.deactivate_user_by_id(user_id)
+                        self.last_message = "User successfully deactivated"
                     else:
                         self.user_service.activate_user_by_id(user_id)
+                        self.last_message = "User successfully activated"
 
                 case 6:
                     self.user_service.reset_login_attempts_by_id(user_id)
-
-            print("\nUser updated successfully\n")
+                    self.last_message = "Login attempts successfully reset"
 
         except AppError as e:
-            self.menu.show_error(str(e))
+            self.last_message = self.menu.show_error(str(e))
 
     # UTILITIES
 
