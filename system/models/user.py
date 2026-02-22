@@ -1,4 +1,5 @@
 from typing import Any
+from security.password_hasher import PasswordHasher
 
 
 class User:
@@ -32,9 +33,6 @@ class User:
             + f"\nactive={self.active} "
             + f"\nlogin_attempts={self.login_attempts}"
         )
-
-    def verify_password(self, password: str) -> bool:
-        return self.password == password
 
     def change_password(self, new_password: str) -> None:
         self.password = new_password
