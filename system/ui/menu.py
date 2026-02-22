@@ -62,7 +62,6 @@ class Menu:
             f"ID ----------- {user.id}\n"
             f"Name --------- {user.name}\n"
             f"Username ----- {user.username}\n"
-            f"Password ----- {user.password}\n"
             f"Role --------- {user.role}\n"
             f"Active ------- {user.active}\n"
             f"Login Attempts {user.login_attempts}\n"
