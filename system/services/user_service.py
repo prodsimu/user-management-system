@@ -4,6 +4,7 @@ from models.session import Session
 from repositories.user_repository import UserRepository
 from services.session_service import SessionService
 from exceptions.exceptions import *
+from security.password_hasher import PasswordHasher
 
 
 class UserService:
@@ -40,11 +41,13 @@ class UserService:
         if self.user_repository.exists_by_field("username", new_username):
             raise UsernameAlreadyExistsError("Username already exists")
 
+        hashed_password = PasswordHasher.hash_password(new_password)
+
         new_user = User(
             id=self.user_repository.get_next_id(),
             name=new_name,
             username=new_username,
-            password=new_password,
+            password=hashed_password,
             role="user",
             active=True,
             login_attempts=0,
@@ -204,7 +207,7 @@ class UserService:
         if not user.active:
             raise InactiveUserError("User is blocked")
 
-        if not user.verify_password(password):
+        if not PasswordHasher.verify_password(password, user.password):
             user.increment_login_attempts()
 
             if user.login_attempts >= self.MAX_LOGIN_ATTEMPTS:
