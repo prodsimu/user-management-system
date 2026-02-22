@@ -5,11 +5,13 @@ from models.user import User
 class Menu:
 
     def start_app(self) -> None:
-        print("=== SYSTEM INITIALIZED ===")
-        print("Admin created automatically:")
-        print("username: admin")
-        print("password: admin123")
-        print("Logging in...\n")
+        return (
+            "=== SYSTEM INITIALIZED ===\n"
+            "Admin created automatically:\n"
+            "username: admin\n"
+            "password: admin123\n"
+            "Logging in...\n"
+        )
 
     def admin_menu(self) -> None:
         print("=== ADMIN MENU ===")

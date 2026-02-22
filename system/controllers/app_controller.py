@@ -56,7 +56,7 @@ class AppController:
 
         if self.first_system_startup:
             self.menu.clear_screen()
-            self.menu.start_app()
+            self.last_message = self.menu.start_app()
             self.first_system_startup = False
 
         while self.runnig:
