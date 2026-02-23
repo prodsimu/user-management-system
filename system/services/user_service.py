@@ -118,6 +118,7 @@ class UserService:
 
     def update_password_by_id(self, user_id: int, new_password: str) -> None:
         user = self.get_user_by_id(user_id)
+
         if not user:
             raise UserNotFoundError()
 
@@ -129,10 +130,11 @@ class UserService:
         if len(new_password) < 6:
             raise InvalidPasswordError("Password must have at least 6 characters")
 
-        if user.verify_password(new_password):
+        if PasswordHasher.verify_password(new_password, user.password):
             raise SamePasswordError("New password cannot be the same as current")
 
-        user.change_password(new_password)
+        hashed_password = PasswordHasher.hash_password(new_password)
+        user.change_password(hashed_password)
 
     def activate_user_by_id(self, user_id: int) -> None:
         user = self.get_user_by_id(user_id)
